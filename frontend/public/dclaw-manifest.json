@@ -1,8 +1,10 @@
 {
   "app_id": "seo",
   "name": "DClaw SEO",
+  "description": "AI SEO agent for site audits, keyword research, content optimization, and rank tracking.",
+  "tagline": "Rank higher with AI",
   "version": "0.1.0",
-  "category": "Marketing",
+  "category": "marketing",
   "icon": "/icons/seo.svg",
   "color": "#10B981",
   "entrypoint": "/",
