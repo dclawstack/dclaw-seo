@@ -1,0 +1,15 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "dclaw-seo.fullname" . }}-db
+  labels:
+    app.kubernetes.io/name: {{ include "dclaw-seo.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  instances: 1
+  storage:
+    size: {{ .Values.postgresql.storage }}
+  bootstrap:
+    initdb:
+      database: dclaw_seo
+      owner: dclaw_seo

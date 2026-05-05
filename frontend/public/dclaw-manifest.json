@@ -1,0 +1,13 @@
+{
+  "app_id": "seo",
+  "name": "DClaw SEO",
+  "version": "0.1.0",
+  "category": "Marketing",
+  "icon": "/icons/seo.svg",
+  "color": "#10B981",
+  "entrypoint": "/",
+  "api_base": "https://seo.dclawstack.io",
+  "permissions": [],
+  "requires_auth": true,
+  "billing_plan": "free"
+}
