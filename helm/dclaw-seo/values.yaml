@@ -45,3 +45,8 @@ autoscaling:
 postgresql:
   enabled: true
   storage: 10Gi
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""

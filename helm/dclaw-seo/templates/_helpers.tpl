@@ -16,3 +16,17 @@
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/* Common labels */}}
+{{- define "dclaw-seo.labels" -}}
+helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+{{ include "dclaw-seo.selectorLabels" . }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/* Selector labels */}}
+{{- define "dclaw-seo.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "dclaw-seo.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
