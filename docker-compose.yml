@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 
 services:
   postgres:
@@ -12,8 +12,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dclaw_seo"]
+      interval: 10s
       timeout: 5s
       retries: 5
 
@@ -21,25 +21,37 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - "8095:8095"
     environment:
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/dclaw_seo
-      API_PORT: 8095
+      APP_ENV: production
+    ports:
+      - "8095:8095"
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8095/health/')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8095
+    environment:
+      PORT: 3006
     ports:
       - "3006:3006"
-    environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8095
     depends_on:
       - backend
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3006/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
 volumes:
   postgres_data:
