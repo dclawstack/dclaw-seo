@@ -1,0 +1,22 @@
+# Production overrides — `helm upgrade --install dclaw-seo helm/dclaw-seo -f helm/dclaw-seo/values-production.yaml`
+# Secrets (secretKey, postgresql.password, *ApiKey) MUST be supplied at deploy
+# time via --set or a sealed/external secret — never committed here.
+replicaCount: 2
+
+config:
+  appEnv: production
+
+ingress:
+  host: seo.dclawstack.io
+  tls:
+    secretName: dclaw-seo-tls
+
+postgresql:
+  instances: 2
+  storage: 20Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 75

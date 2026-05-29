@@ -1,40 +1,72 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/dclawstack/dclaw-seo
+  registry: ghcr.io/dclawstack
   pullPolicy: IfNotPresent
-  tag: ""
+  # Tag is overridden per-env / by the deploy workflow (git SHA).
+  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+backend:
+  repository: dclaw-seo-backend
+  port: 8095
+  resources:
+    limits: { cpu: "500m", memory: "512Mi" }
+    requests: { cpu: "100m", memory: "128Mi" }
+
+frontend:
+  enabled: true
+  repository: dclaw-seo-frontend
+  port: 3006
+  resources:
+    limits: { cpu: "300m", memory: "256Mi" }
+    requests: { cpu: "50m", memory: "64Mi" }
+
+# Non-root, no privilege escalation, drop all caps (H.5).
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop: ["ALL"]
+
+# App config (non-secret). LLM points at an in-cluster Ollama service by default.
+config:
+  appEnv: production
+  llmProvider: auto
+  ollamaUrl: "http://ollama:11434"
+  ollamaModel: "llama3.2:3b"
+
+# Secrets — supply real values via --set / a sealed secret / CI. Defaults are
+# placeholders so `helm template` renders; DO NOT ship these.
+secrets:
+  secretKey: "change-me-in-production"
+  openrouterApiKey: ""
+  stripeApiKey: ""
+  pagespeedApiKey: ""
+  gbpApiKey: ""
+
 service:
   type: ClusterIP
-  port: 8095
+  backendPort: 8095
+  frontendPort: 3006
 
 ingress:
   enabled: true
   className: nginx
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-  hosts:
-    - host: seo.dclawstack.io
-      paths:
-        - path: /
-          pathType: Prefix
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  host: seo.dclawstack.io
   tls:
-    - secretName: dclaw-seo-tls
-      hosts:
-        - seo.dclawstack.io
-
-resources:
-  limits:
-    cpu: 500m
-    memory: 512Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
+    enabled: true
+    secretName: dclaw-seo-tls
 
 autoscaling:
   enabled: false
@@ -42,9 +74,14 @@ autoscaling:
   maxReplicas: 3
   targetCPUUtilizationPercentage: 80
 
+# CloudNativePG-managed Postgres.
 postgresql:
   enabled: true
+  instances: 1
   storage: 10Gi
+  database: dclaw_seo
+  username: dclaw_seo
+  password: "change-me-in-production"
 
 serviceAccount:
   create: true
