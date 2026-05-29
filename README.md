@@ -41,6 +41,10 @@ docker-compose up --build
 | POST | `/api/v1/seo/content/optimize` | Content optimization |
 | POST | `/api/v1/seo/rankings/track` | Rankings tracking |
 
+## Contributors
+
+- [Deepro Mallick (@deepro713)](https://github.com/deepro713)
+
 ## License
 
 MIT — DClaw Stack
