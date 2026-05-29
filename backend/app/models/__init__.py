@@ -6,6 +6,7 @@ from app.models.llm_settings import LLMSettings
 from app.models.backlink import Backlink
 from app.models.performance_metric import PerformanceMetric
 from app.models.local_seo import Citation, LocalBusiness, Review
+from app.models.report_schedule import ReportSchedule
 
 __all__ = [
     "SiteAudit",
@@ -18,4 +19,5 @@ __all__ = [
     "LocalBusiness",
     "Citation",
     "Review",
+    "ReportSchedule",
 ]

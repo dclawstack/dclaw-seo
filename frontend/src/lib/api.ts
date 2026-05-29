@@ -163,3 +163,51 @@ export async function addReview(
 export async function listReviews(businessId: number) {
   return apiFetch(`/api/v1/local/businesses/${businessId}/reviews`);
 }
+
+// --- Reports & forecasting ---
+export interface ReportBranding {
+  title: string;
+  brand_company?: string;
+  brand_color?: string;
+}
+
+export async function reportPreview(body: ReportBranding) {
+  return apiFetch("/api/v1/reports/preview", { method: "POST", body: JSON.stringify(body) });
+}
+
+export async function downloadReport(format: "pdf" | "csv", body: ReportBranding) {
+  const res = await fetch(`${API_BASE}/api/v1/reports/${format}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `seo-report.${format}`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export async function createSchedule(body: {
+  site_url: string;
+  frequency: string;
+  recipient: string;
+  brand_company?: string;
+  brand_color?: string;
+}) {
+  return apiFetch("/api/v1/reports/schedules", { method: "POST", body: JSON.stringify(body) });
+}
+
+export async function listSchedules() {
+  return apiFetch("/api/v1/reports/schedules");
+}
+
+export async function forecastRank(keyword: string, url: string, horizon = 4) {
+  return apiFetch("/api/v1/reports/forecast", {
+    method: "POST",
+    body: JSON.stringify({ keyword, url, horizon }),
+  });
+}

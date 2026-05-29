@@ -6,7 +6,7 @@ from app.core.database import engine, Base
 from app.core.config import settings
 from app.core.logging import configure_logging, get_logger
 from app.api.routes import health
-from app.api.v1 import ai, local_seo, seo, settings as settings_router
+from app.api.v1 import ai, local_seo, reports, seo, settings as settings_router
 
 configure_logging()
 logger = get_logger(__name__)
@@ -36,6 +36,7 @@ app.include_router(health.router)
 app.include_router(seo.router, prefix="/api/v1")
 app.include_router(ai.router, prefix="/api/v1")
 app.include_router(local_seo.router, prefix="/api/v1")
+app.include_router(reports.router, prefix="/api/v1")
 app.include_router(settings_router.router, prefix="/api/v1")
 
 if __name__ == "__main__":
