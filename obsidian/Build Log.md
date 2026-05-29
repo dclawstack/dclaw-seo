@@ -27,6 +27,8 @@ Human-readable mirror of development progress. One row per completed task (Neon 
 | 2026-05-29 | P1.3 | Competitor Gap Analysis | Phase 2 | #17 | — | Your Suggest keywords vs competitor page terms; gap + opportunity scores; optional LLM; stateless |
 | 2026-05-29 | P1.4 | AI Content Brief Generator | Phase 2 | #18 | — | Suggest related/question queries → outline/questions/length/secondary kw; LLM-enriched or deterministic |
 | 2026-05-29 | P1.5 | Core Web Vitals / Performance Monitor | Phase 2 | #19 | — | Real Lighthouse CWV via PageSpeed Insights (free/keyless, optional `PAGESPEED_API_KEY`); `performance_metrics` (mig `e3ff7fe3c6e1`) trends; recommendations |
+| 2026-05-30 | — | Hide copilot widget on welcome splash | Maint | — | #45 | `usePathname` guard returns `null` on `/` so the floating copilot is hidden on the bare splash; tsc clean (seo's landing fallback was already correct at 3006, so no port-fix PR) |
+| 2026-05-30 | — | Local Docker refresh (standalone) | Maint | — | — | Rebuilt + recreated via `docker-compose.standalone.yml` (bundled per-app Postgres, internal 5432, not host-published); new code verified live on :3006 |
 
 ## Related
 
