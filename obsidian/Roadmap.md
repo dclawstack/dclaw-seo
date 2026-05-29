@@ -2,6 +2,10 @@
 
 From `REVISED-PRD.md` v2.3 and `PLAN-v1.2.md`. Every P0 must ship with an AI Copilot (YC S25/W26 mandate).
 
+## Foundation (Phase 0) — ✅ complete (v0.1.0)
+
+Scaffold hardening shipped: ports/config reconciled, repository layer, Alembic migrations, real (no-mock) persistence, test baseline (7 passed / 90% cov), structlog, docs accuracy, and the DKube purple design system. Product features below begin in **Phase 1**.
+
 ## P0 — Must have (demo-ready)
 
 | # | Feature | AI component | Acceptance |

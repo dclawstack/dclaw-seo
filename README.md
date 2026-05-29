@@ -17,6 +17,7 @@ AI SEO Agent for the DClaw Stack. Audit sites, research keywords, optimize conte
 # Backend
 cd backend
 pip install -e ".[dev]"
+alembic upgrade head          # apply DB migrations (DATABASE_URL -> dclaw_seo)
 uvicorn app.main:app --reload --port 8095
 
 # Frontend

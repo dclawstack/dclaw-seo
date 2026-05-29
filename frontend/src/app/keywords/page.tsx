@@ -54,7 +54,7 @@ export default function KeywordsPage() {
               <Card key={i}>
                 <CardContent className="flex items-center justify-between">
                   <span className="font-medium">{kw.term}</span>
-                  <div className="flex gap-4 text-sm text-gray-600">
+                  <div className="flex gap-4 text-sm text-fg-2">
                     <span>Volume: {kw.search_volume.toLocaleString()}</span>
                     <span>Difficulty: {kw.difficulty}</span>
                   </div>

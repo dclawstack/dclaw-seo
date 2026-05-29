@@ -15,7 +15,7 @@ The product targets teams that treat SEO as a measurable growth channel, drawing
 
 ## Maturity
 
-Tier 2 (Partial). P0 foundation features are partially implemented; P1/P2 not yet started. See [[Roadmap]] and [[Open Issues]].
+**Phase 0 complete (v0.1.0)** — a green, no-mock, AGENTS-compliant baseline: repository layer, Alembic migrations, real persistence, tests green (90% cov), structlog, reconciled docs, and the DKube purple design system. Still Tier 2 overall; the P0 **product** features (AI Copilot, keyword research, content optimizer, rank tracking) begin in **Phase 1** (awaiting LLM + SEO-data-provider keys). See [[Roadmap]] and [[Open Issues]].
 
 ## Related
 

@@ -15,22 +15,22 @@ export default function DashboardPage() {
           <Card>
             <CardTitle>SEO Score</CardTitle>
             <CardContent>
-              <p className="text-4xl font-bold text-emerald-600">87</p>
-              <p className="text-sm text-gray-500">Last audit: 2 hours ago</p>
+              <p className="text-4xl font-bold text-brand">87</p>
+              <p className="text-sm text-fg-2">Last audit: 2 hours ago</p>
             </CardContent>
           </Card>
           <Card>
             <CardTitle>Tracked Keywords</CardTitle>
             <CardContent>
-              <p className="text-4xl font-bold text-emerald-600">24</p>
-              <p className="text-sm text-gray-500">+3 this week</p>
+              <p className="text-4xl font-bold text-brand">24</p>
+              <p className="text-sm text-fg-2">+3 this week</p>
             </CardContent>
           </Card>
           <Card>
             <CardTitle>Recent Audits</CardTitle>
             <CardContent>
-              <p className="text-4xl font-bold text-emerald-600">5</p>
-              <p className="text-sm text-gray-500">All passed</p>
+              <p className="text-4xl font-bold text-brand">5</p>
+              <p className="text-sm text-fg-2">All passed</p>
             </CardContent>
           </Card>
         </div>

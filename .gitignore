@@ -19,3 +19,6 @@ dist/
 .obsidian/workspace*.json
 .obsidian/cache
 obsidian/scratch/
+
+# Claude Code harness artifacts
+.claude/scheduled_tasks.lock

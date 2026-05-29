@@ -15,8 +15,8 @@ export default function SettingsPage() {
           <Card>
             <CardTitle>API Configuration</CardTitle>
             <CardContent>
-              <p className="text-sm text-gray-600 mb-2">Backend API Base URL</p>
-              <div className="p-3 bg-gray-100 rounded-lg text-sm font-mono">
+              <p className="text-sm text-fg-1 mb-2">Backend API Base URL</p>
+              <div className="p-3 bg-bg-muted rounded-md text-sm font-mono">
                 {process.env.NEXT_PUBLIC_API_URL || "http://localhost:8095"}
               </div>
             </CardContent>
@@ -24,7 +24,7 @@ export default function SettingsPage() {
           <Card>
             <CardTitle>About</CardTitle>
             <CardContent>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-fg-1">
                 DClaw SEO v0.1.0 — Rank higher with AI. Part of the DClaw Stack.
               </p>
             </CardContent>

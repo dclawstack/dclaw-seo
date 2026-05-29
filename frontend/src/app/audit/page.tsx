@@ -51,17 +51,17 @@ export default function AuditPage() {
           <Card>
             <CardTitle>Results for {result.url}</CardTitle>
             <CardContent>
-              <p className="text-3xl font-bold text-emerald-600 mb-4">Score: {result.score}</p>
+              <p className="text-3xl font-bold text-brand mb-4">Score: {result.score}</p>
               <ul className="space-y-2">
                 {result.issues.map((issue: any, i: number) => (
                   <li
                     key={i}
-                    className={`p-3 rounded-lg ${
+                    className={`p-3 rounded-md ${
                       issue.severity === "error"
-                        ? "bg-red-50 text-red-700"
+                        ? "bg-danger-bg text-danger"
                         : issue.severity === "warning"
-                        ? "bg-yellow-50 text-yellow-700"
-                        : "bg-blue-50 text-blue-700"
+                        ? "bg-warning-bg text-warning"
+                        : "bg-info-bg text-info"
                     }`}
                   >
                     <span className="font-semibold uppercase text-xs">{issue.severity}</span>:{" "}
