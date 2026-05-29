@@ -67,6 +67,13 @@ What the scaffold already has, and what's missing — this is why Phase 0 exists
 - **F0.7 — Docs accuracy pass** · Docs · P1
     - Reconcile `docs/reference/*` + `AGENTS.md` port/identity with F0.1; note manifest already present
     - *Acceptance:* docs match code
+- **F0.8 — Adopt DKube purple design system** · Frontend · P0
+    - Port `frontend/src/styles/brand.css` (`--dk-*` purple tokens) **verbatim** from `dclaw-marketing`
+    - Load **Poppins** via `next/font/google`; expose `--dk-font-sans`; wire in `app/layout.tsx`
+    - Copy the DKube brand source kit into `design/` (`BRAND_GUIDELINES.md`, `colors_and_type.css`, fonts, logos/assets) — aligns with the `dkube-design` skill
+    - Restyle the pre-built UI components to consume `--dk-*` tokens; add DClaw logo/favicons; no hardcoded hex; light mode only
+    - *Decision:* the unified **DKube purple** brand is used identically to marketing — this **supersedes** the emerald `#10B981` named in REVISED-PRD
+    - *Acceptance:* every surface uses `--dk-*` tokens; renders in the DKube purple system; Poppins loaded
 
 ---
 
@@ -144,6 +151,13 @@ What the scaffold already has, and what's missing — this is why Phase 0 exists
 - **H.5 — Security & secrets hardening** · Infra · P0 — no hardcoded secrets (`.env`/K8s Secrets); non-root containers; TLS ingress; dependency audit
 - **H.6 — Helm / K8s production deploy** · Infra · P1 — CloudNativePG; `ClusterIP`; deploy workflow; values per env
 - **H.7 — Docs, demo & YC market-ready checklist** · Docs · P1 — user guide + PDF; demo video; close REVISED-PRD §8 scaffold checklist
+- **H.8 — Marketing landing page (standalone Next.js, Vercel-deferred)** · Frontend · P1
+    - Scaffold a **standalone `landing/` Next.js app** (own `package.json`/`tsconfig`/`next.config`), mirroring `dclaw-marketing/landing`
+    - Apply the same **DKube purple** design system (shared `--dk-*` tokens + Poppins)
+    - Sections: **hero** (headline + a *single CTA button → the frontend app*), features (P0 capabilities), how-it-works, footer
+    - Brand assets (DClaw logos, favicons, `site.webmanifest`); `NEXT_PUBLIC_APP_URL` as the CTA target; responsive + SEO/OG meta
+    - **Vercel hookup deferred** — structure Vercel-ready, no connection wired now
+    - *Acceptance:* `landing/` builds green; hero CTA links through to the app; design matches the product
 
 ---
 
