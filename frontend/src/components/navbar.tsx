@@ -22,7 +22,10 @@ export function Navbar() {
   return (
     <nav className="w-64 min-h-screen bg-bg border-r border-border p-4">
       <div className="mb-8">
-        <h1 className="text-xl font-bold text-brand">DClaw SEO</h1>
+        <div className="flex items-center gap-2">
+          <img src="/brand/logos/dclaw-icon-purple.svg" alt="" className="h-8 w-8" />
+          <h1 className="text-xl font-bold text-brand">DClaw SEO</h1>
+        </div>
         <p className="text-xs text-fg-2">Rank higher with AI</p>
       </div>
       <ul className="space-y-1">
