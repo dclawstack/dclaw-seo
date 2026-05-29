@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import { CopilotWidget } from "@/components/copilot-widget";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -36,6 +37,7 @@ export default function RootLayout({
         style={{ fontFamily: "var(--font-poppins), var(--dk-font-sans)" }}
       >
         {children}
+        <CopilotWidget />
       </body>
     </html>
   );
