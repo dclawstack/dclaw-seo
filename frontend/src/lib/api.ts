@@ -54,6 +54,13 @@ export async function analyzeBacklinks(
   });
 }
 
+export async function competitorGap(seed: string, competitorUrl: string) {
+  return apiFetch("/api/v1/seo/competitor/gap", {
+    method: "POST",
+    body: JSON.stringify({ seed, competitor_url: competitorUrl }),
+  });
+}
+
 export async function getLLMSettings() {
   return apiFetch("/api/v1/settings/llm");
 }

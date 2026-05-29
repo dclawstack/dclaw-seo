@@ -14,7 +14,9 @@ from app.schemas.seo import (
     RankingsTrackRequest,
     RankingsTrackResponse,
 )
+from app.schemas.competitor import CompetitorGapRequest, CompetitorGapResponse
 from app.services.backlinks import analyze_backlinks, list_backlinks
+from app.services.competitor import CompetitorFetchError, competitor_gap
 from app.services.content_optimizer import optimize_content
 from app.services.keyword_research import research_keywords
 from app.services.rank_tracker import track_rankings
@@ -76,3 +78,14 @@ async def backlinks_list(
 ) -> BacklinkAnalyzeResponse:
     """List stored backlinks for a target."""
     return await list_backlinks(db, target_url)
+
+
+@router.post("/competitor/gap", response_model=CompetitorGapResponse)
+async def competitor_gap_analysis(
+    request: CompetitorGapRequest, db: AsyncSession = Depends(get_db)
+) -> CompetitorGapResponse:
+    """Find content gaps vs a competitor (your Suggest keywords vs their page terms)."""
+    try:
+        return await competitor_gap(db, request)
+    except CompetitorFetchError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
