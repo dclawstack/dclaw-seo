@@ -41,7 +41,8 @@ What the scaffold already has, and what's missing — this is why Phase 0 exists
 **Goal:** a green, real (no-mock), deployable baseline that obeys every `AGENTS.md` rule. **Target:** `v0.1.0`.
 
 - **F0.1 — Resolve ports & fix config drift** · Infra · P0
-    - Pick one canonical `(backend, frontend)` port pair and reconcile `README` / `AGENTS` / `REVISED-PRD` / the shared port registry
+    - **Decision (2026-05-29):** canonical pair = backend **`8095`** / frontend **`3006`** (README values); reconcile `AGENTS` (`8008/3008`) and `REVISED-PRD` (`18168/3098`) to match. ⚠️ `8095/3006` collides with `dclaw-crm` in the shared registry — collision resolution deferred per owner.
+    - Reconcile `README` / `AGENTS` / `REVISED-PRD` / the shared port registry to the pair above
     - Fix `.env.example` `DATABASE_URL` (`dclaw_crm` → `dclaw_seo`) and `NEXT_PUBLIC_API_URL`
     - Verify `docker-compose.yml` port mappings match `EXPOSE`/`ENV PORT`
     - *Acceptance:* one port pair everywhere; `docker compose config` passes
