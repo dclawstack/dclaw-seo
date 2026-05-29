@@ -18,6 +18,8 @@ const nav = [
   { href: "/local", label: "Local SEO" },
   { href: "/brief", label: "Content Brief" },
   { href: "/performance", label: "Performance" },
+  { href: "/forecast", label: "Forecast" },
+  { href: "/reports", label: "Reports" },
   { href: "/settings", label: "Settings" },
 ];
 
