@@ -79,7 +79,7 @@ class OllamaProvider:
         self.model = config.ollama_model
         self.timeout = config.timeout
 
-    async def complete(self, messages: list[Message], *, temperature: float) -> str:
+    async def complete(self, messages: list[Message], *, temperature: float) -> tuple[str, dict]:
         payload = {
             "model": self.model,
             "messages": [{"role": m.role, "content": m.content} for m in messages],
@@ -89,7 +89,13 @@ class OllamaProvider:
         async with httpx.AsyncClient(timeout=self.timeout) as client:
             resp = await client.post(f"{self.url}/api/chat", json=payload)
             resp.raise_for_status()
-            return resp.json()["message"]["content"]
+            data = resp.json()
+        usage = {
+            "model": self.model,
+            "prompt_tokens": int(data.get("prompt_eval_count", 0) or 0),
+            "completion_tokens": int(data.get("eval_count", 0) or 0),
+        }
+        return data["message"]["content"], usage
 
 
 class OpenRouterProvider:
@@ -101,7 +107,7 @@ class OpenRouterProvider:
         self.api_key = config.openrouter_api_key
         self.timeout = config.timeout
 
-    async def complete(self, messages: list[Message], *, temperature: float) -> str:
+    async def complete(self, messages: list[Message], *, temperature: float) -> tuple[str, dict]:
         payload = {
             "model": self.model,
             "messages": [{"role": m.role, "content": m.content} for m in messages],
@@ -113,7 +119,14 @@ class OpenRouterProvider:
                 f"{self.base_url}/chat/completions", json=payload, headers=headers
             )
             resp.raise_for_status()
-            return resp.json()["choices"][0]["message"]["content"]
+            data = resp.json()
+        u = data.get("usage", {}) or {}
+        usage = {
+            "model": self.model,
+            "prompt_tokens": int(u.get("prompt_tokens", 0) or 0),
+            "completion_tokens": int(u.get("completion_tokens", 0) or 0),
+        }
+        return data["choices"][0]["message"]["content"], usage
 
 
 _PROVIDERS = {"ollama": OllamaProvider, "openrouter": OpenRouterProvider}
@@ -136,14 +149,34 @@ class LLMService:
                 "No LLM provider configured. Set an Ollama endpoint or an OpenRouter "
                 "token in Settings (or backend/.env)."
             )
+
+        # Per-org cost cap + usage metering (no-op when unauthenticated/no meter).
+        from app.core.context import get_meter
+        from app.services import metering
+
+        meter = get_meter()
+        if meter is not None:
+            await metering.enforce_cap(meter.db, meter.org_id)  # may raise QuotaExceeded
+
         last_error: Exception | None = None
         for name in candidates:
             provider = _PROVIDERS[name](cfg)
             try:
-                return await provider.complete(messages, temperature=temperature)
+                text, usage = await provider.complete(messages, temperature=temperature)
             except Exception as exc:  # try the next configured provider
                 last_error = exc
                 logger.warning("llm_provider_failed", provider=name, error=str(exc))
+                continue
+            if meter is not None:
+                await metering.record(
+                    meter.db,
+                    meter.org_id,
+                    meter.feature,
+                    usage.get("model", name),
+                    usage.get("prompt_tokens", 0),
+                    usage.get("completion_tokens", 0),
+                )
+            return text
         raise LLMError(f"All configured LLM providers failed: {last_error}") from last_error
 
 

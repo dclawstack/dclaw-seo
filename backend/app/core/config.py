@@ -24,6 +24,15 @@ class Settings(BaseSettings):
     # --- Google Business Profile (Local SEO); optional, enables live GBP sync ---
     gbp_api_key: str = ""
 
+    # --- Auth (self-contained JWT) ---
+    secret_key: str = "dev-secret-change-me"
+    jwt_algorithm: str = "HS256"
+    access_token_expire_minutes: int = 60 * 24
+
+    # --- LLM cost metering (per-org ledger + cost cap) ---
+    # Default rate for cloud tokens; local Ollama is treated as $0 but still metered.
+    llm_cost_per_1k_tokens_usd: float = 0.0
+
     # --- SMTP (scheduled white-label report delivery); optional ---
     smtp_host: str = ""
     smtp_port: int = 587

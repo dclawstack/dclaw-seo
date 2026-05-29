@@ -1,15 +1,98 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8095";
 
+const TOKEN_KEY = "dclaw_token";
+
+export function getToken(): string | null {
+  return typeof window !== "undefined" ? localStorage.getItem(TOKEN_KEY) : null;
+}
+export function setToken(token: string) {
+  if (typeof window !== "undefined") localStorage.setItem(TOKEN_KEY, token);
+}
+export function clearToken() {
+  if (typeof window !== "undefined") localStorage.removeItem(TOKEN_KEY);
+}
+
+export function authHeaders(): Record<string, string> {
+  const t = getToken();
+  return t ? { Authorization: `Bearer ${t}` } : {};
+}
+
+function handleUnauthorized() {
+  clearToken();
+  if (typeof window !== "undefined" && !window.location.pathname.startsWith("/login")) {
+    window.location.href = "/login";
+  }
+}
+
 export async function apiFetch(path: string, options?: RequestInit) {
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
+      ...authHeaders(),
       ...options?.headers,
     },
   });
+  if (res.status === 401) {
+    handleUnauthorized();
+    throw new Error("Unauthorized");
+  }
+  if (res.status === 402) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.detail || "Monthly LLM cost cap reached");
+  }
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   return res.json();
+}
+
+// --- Auth ---
+export async function registerUser(email: string, password: string, org_name: string) {
+  const data = await apiFetch("/api/v1/auth/register", {
+    method: "POST",
+    body: JSON.stringify({ email, password, org_name }),
+  });
+  setToken(data.access_token);
+  return data;
+}
+
+export async function loginUser(email: string, password: string) {
+  const data = await apiFetch("/api/v1/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+  setToken(data.access_token);
+  return data;
+}
+
+export function logout() {
+  clearToken();
+  if (typeof window !== "undefined") window.location.href = "/login";
+}
+
+export async function getMe() {
+  return apiFetch("/api/v1/auth/me");
+}
+
+export async function getUsage() {
+  return apiFetch("/api/v1/org/usage");
+}
+
+export async function setCostCap(monthly_cost_cap_usd: number | null) {
+  return apiFetch("/api/v1/org/cost-cap", {
+    method: "PUT",
+    body: JSON.stringify({ monthly_cost_cap_usd }),
+  });
+}
+
+export async function listProjects() {
+  return apiFetch("/api/v1/org/projects");
+}
+
+export async function createProject(name: string, domain?: string) {
+  return apiFetch("/api/v1/org/projects", {
+    method: "POST",
+    body: JSON.stringify({ name, domain }),
+  });
 }
 
 export async function auditSite(url: string) {
@@ -178,7 +261,7 @@ export async function reportPreview(body: ReportBranding) {
 export async function downloadReport(format: "pdf" | "csv", body: ReportBranding) {
   const res = await fetch(`${API_BASE}/api/v1/reports/${format}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(`API error: ${res.status}`);

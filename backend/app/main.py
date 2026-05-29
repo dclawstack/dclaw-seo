@@ -1,12 +1,22 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.database import engine, Base
 from app.core.config import settings
 from app.core.logging import configure_logging, get_logger
 from app.api.routes import health
-from app.api.v1 import ai, local_seo, reports, seo, settings as settings_router
+from app.api.v1 import (
+    ai,
+    auth,
+    local_seo,
+    reports,
+    seo,
+    settings as settings_router,
+    tenancy,
+)
+from app.core.auth_deps import get_current_user
+from app.services.metering import QuotaExceeded
 
 configure_logging()
 logger = get_logger(__name__)
@@ -32,12 +42,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.exception_handler(QuotaExceeded)
+async def _quota_handler(request, exc: QuotaExceeded):
+    from fastapi.responses import JSONResponse
+
+    return JSONResponse(status_code=402, content={"detail": str(exc)})
+
+
+# Public
 app.include_router(health.router)
-app.include_router(seo.router, prefix="/api/v1")
-app.include_router(ai.router, prefix="/api/v1")
-app.include_router(local_seo.router, prefix="/api/v1")
-app.include_router(reports.router, prefix="/api/v1")
-app.include_router(settings_router.router, prefix="/api/v1")
+app.include_router(auth.router, prefix="/api/v1")
+
+# Authenticated (JWT required; LLM calls are metered against the user's org)
+_protected = [Depends(get_current_user)]
+app.include_router(seo.router, prefix="/api/v1", dependencies=_protected)
+app.include_router(ai.router, prefix="/api/v1", dependencies=_protected)
+app.include_router(local_seo.router, prefix="/api/v1", dependencies=_protected)
+app.include_router(reports.router, prefix="/api/v1", dependencies=_protected)
+app.include_router(tenancy.router, prefix="/api/v1")
+app.include_router(settings_router.router, prefix="/api/v1", dependencies=_protected)
 
 if __name__ == "__main__":
     import uvicorn
