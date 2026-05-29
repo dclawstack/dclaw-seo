@@ -21,6 +21,9 @@ class Settings(BaseSettings):
     # --- PageSpeed Insights (Core Web Vitals); optional free key for quota ---
     pagespeed_api_key: str = ""
 
+    # --- Google Business Profile (Local SEO); optional, enables live GBP sync ---
+    gbp_api_key: str = ""
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
