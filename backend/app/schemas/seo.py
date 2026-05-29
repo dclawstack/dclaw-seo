@@ -50,8 +50,14 @@ class ContentSuggestion(BaseModel):
 
 class ContentOptimizeResponse(BaseModel):
     target_keyword: str
-    optimized_content: str
+    score: int  # 0-100
+    readability: float  # Flesch reading ease
+    keyword_density: float  # percent
+    word_count: int
+    optimized_content: Optional[str] = None  # LLM rewrite ("after"); None without LLM
     suggestions: List[ContentSuggestion]
+    llm_enriched: bool = False
+    note: Optional[str] = None
 
 
 class RankingsTrackRequest(BaseModel):

@@ -12,11 +12,11 @@ from app.schemas.seo import (
     RankingsTrackRequest,
     RankingsTrackResponse,
 )
+from app.services.content_optimizer import optimize_content
 from app.services.keyword_research import research_keywords
 from app.services.seo_data import ProviderUnavailable
 from app.services.seo_service import (
     run_site_audit,
-    optimize_content,
     track_rankings,
 )
 

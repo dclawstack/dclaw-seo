@@ -56,15 +56,35 @@ export default function ContentPage() {
         {result && (
           <div className="space-y-6">
             <Card>
-              <CardTitle>Optimized Content</CardTitle>
+              <CardTitle>Content Score</CardTitle>
               <CardContent>
-                <div className="whitespace-pre-wrap bg-bg-muted p-4 rounded-md text-sm">
-                  {result.optimized_content}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div>
+                    <p className="text-4xl font-bold text-brand">{result.score}</p>
+                    <p className="text-xs text-fg-2">Score / 100</p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-semibold">{result.readability}</p>
+                    <p className="text-xs text-fg-2">Reading ease</p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-semibold">{result.keyword_density}%</p>
+                    <p className="text-xs text-fg-2">Keyword density</p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-semibold">{result.word_count}</p>
+                    <p className="text-xs text-fg-2">Words</p>
+                  </div>
                 </div>
+                {result.note && (
+                  <div className="mt-4 p-3 bg-info-bg text-info rounded-md text-sm">
+                    {result.note}
+                  </div>
+                )}
               </CardContent>
             </Card>
             <Card>
-              <CardTitle>Suggestions</CardTitle>
+              <CardTitle>Improvement checklist</CardTitle>
               <CardContent>
                 <ul className="space-y-2">
                   {result.suggestions.map((s: any, i: number) => (
@@ -75,6 +95,16 @@ export default function ContentPage() {
                 </ul>
               </CardContent>
             </Card>
+            {result.optimized_content && (
+              <Card>
+                <CardTitle>Optimized rewrite</CardTitle>
+                <CardContent>
+                  <div className="whitespace-pre-wrap bg-bg-muted p-4 rounded-md text-sm">
+                    {result.optimized_content}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         )}
       </main>

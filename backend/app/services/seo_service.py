@@ -3,18 +3,13 @@ import json
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.content_optimization import ContentOptimization
 from app.models.ranking import Ranking
 from app.models.site_audit import SiteAudit
-from app.repositories.content_optimization import ContentOptimizationRepository
 from app.repositories.ranking import RankingRepository
 from app.repositories.site_audit import SiteAuditRepository
 from app.schemas.seo import (
     AuditRequest,
     AuditResponse,
-    ContentOptimizeRequest,
-    ContentOptimizeResponse,
-    ContentSuggestion,
     IssueItem,
     RankDataPoint,
     RankingsTrackRequest,
@@ -50,39 +45,6 @@ async def run_site_audit(db: AsyncSession, request: AuditRequest) -> AuditRespon
     stored = [IssueItem(**i) for i in json.loads(audit.issues)]
     return AuditResponse(
         url=audit.url, score=audit.score, issues=stored, created_at=audit.created_at
-    )
-
-
-async def optimize_content(
-    db: AsyncSession, request: ContentOptimizeRequest
-) -> ContentOptimizeResponse:
-    keyword = request.target_keyword
-    optimized = (
-        f"# {keyword.title()}\n\n"
-        f"{request.content}\n\n"
-        f"## Why {keyword.title()} Matters\n\n"
-        f"In today's competitive landscape, **{keyword}** is essential. "
-        f"This guide covers everything you need to know about {keyword}."
-    )
-    suggestions = [
-        ContentSuggestion(type="structure", message="Add H2 subheadings every 300 words."),
-        ContentSuggestion(
-            type="keyword", message=f"Include '{keyword}' in the first 100 words."
-        ),
-        ContentSuggestion(type="readability", message="Break paragraphs into 2-3 sentences."),
-    ]
-    record = ContentOptimization(
-        target_keyword=keyword,
-        original_content=request.content,
-        optimized_content=optimized,
-        suggestions=json.dumps([s.model_dump() for s in suggestions]),
-    )
-    await ContentOptimizationRepository(db).create(record)
-    stored = [ContentSuggestion(**s) for s in json.loads(record.suggestions)]
-    return ContentOptimizeResponse(
-        target_keyword=record.target_keyword,
-        optimized_content=record.optimized_content,
-        suggestions=stored,
     )
 
 

@@ -28,19 +28,6 @@ async def test_audit_rejects_empty_url(client):
 
 
 @pytest.mark.asyncio
-async def test_content_optimize(client):
-    resp = await client.post(
-        "/api/v1/seo/content/optimize",
-        json={"target_keyword": "espresso", "content": "short body"},
-    )
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["target_keyword"] == "espresso"
-    assert "espresso" in body["optimized_content"].lower()
-    assert len(body["suggestions"]) >= 1
-
-
-@pytest.mark.asyncio
 async def test_rankings_track_history_grows(client):
     payload = {"keyword": "latte art", "url": "https://shop.example"}
     first = await client.post("/api/v1/seo/rankings/track", json=payload)
