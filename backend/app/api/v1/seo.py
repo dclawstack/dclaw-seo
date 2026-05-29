@@ -16,11 +16,13 @@ from app.schemas.seo import (
 )
 from app.schemas.competitor import CompetitorGapRequest, CompetitorGapResponse
 from app.schemas.content_brief import ContentBriefRequest, ContentBriefResponse
+from app.schemas.performance import PerformanceRequest, PerformanceResponse
 from app.services.backlinks import analyze_backlinks, list_backlinks
 from app.services.competitor import CompetitorFetchError, competitor_gap
 from app.services.content_brief import generate_brief
 from app.services.content_optimizer import optimize_content
 from app.services.keyword_research import research_keywords
+from app.services.performance import PerfUnavailable, monitor_performance, performance_history
 from app.services.rank_tracker import track_rankings
 from app.services.seo_data import ProviderUnavailable
 from app.services.site_auditor import run_site_audit
@@ -88,6 +90,25 @@ async def backlinks_list(
 ) -> BacklinkAnalyzeResponse:
     """List stored backlinks for a target."""
     return await list_backlinks(db, target_url)
+
+
+@router.post("/performance", response_model=PerformanceResponse)
+async def performance(
+    request: PerformanceRequest, db: AsyncSession = Depends(get_db)
+) -> PerformanceResponse:
+    """Run a PageSpeed Insights (Core Web Vitals) check and record the trend."""
+    try:
+        return await monitor_performance(db, request)
+    except PerfUnavailable as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+
+@router.get("/performance", response_model=PerformanceResponse)
+async def performance_trend(
+    url: str, db: AsyncSession = Depends(get_db)
+) -> PerformanceResponse:
+    """Stored Core Web Vitals history for a URL."""
+    return await performance_history(db, url)
 
 
 @router.post("/competitor/gap", response_model=CompetitorGapResponse)

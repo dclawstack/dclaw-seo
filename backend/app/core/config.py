@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     openrouter_model: str = "meta-llama/llama-3.1-8b-instruct"
     llm_timeout_seconds: float = 60.0
 
+    # --- PageSpeed Insights (Core Web Vitals); optional free key for quota ---
+    pagespeed_api_key: str = ""
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 

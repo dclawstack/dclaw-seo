@@ -51,6 +51,13 @@ export async function generateBrief(keyword: string) {
   });
 }
 
+export async function checkPerformance(url: string, strategy = "mobile") {
+  return apiFetch("/api/v1/seo/performance", {
+    method: "POST",
+    body: JSON.stringify({ url, strategy }),
+  });
+}
+
 export async function analyzeBacklinks(
   targetUrl: string,
   links: { source_url: string; anchor_text?: string }[]
