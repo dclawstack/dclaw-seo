@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: dclaw-seo-backend
+    metrics_path: /metrics
+    static_configs:
+      # Backend is reached over the host gateway when this stack runs separately.
+      - targets: ["host.docker.internal:8095"]
+        labels:
+          service: dclaw-seo

@@ -71,3 +71,16 @@ jobs:
           NEXT_PUBLIC_API_URL: http://localhost:8000
         run: npm run build
         timeout-minutes: 5
+
+  dependency-audit:
+    runs-on: ubuntu-latest
+    continue-on-error: true  # advisory — surfaces CVEs without blocking merges
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: pip-audit (backend deps)
+        run: |
+          pip install pip-audit
+          pip-audit -r backend/requirements.txt

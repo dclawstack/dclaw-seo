@@ -19,9 +19,12 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3006
 
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
+# Run as the unprivileged `node` user baked into the image (H.5: non-root).
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+COPY --from=builder --chown=node:node /app/public ./public
+
+USER node
 
 EXPOSE 3006
 
