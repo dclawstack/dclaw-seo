@@ -174,7 +174,7 @@ Available components:
 | dclaw-hr | 8097 | 3008 | dclaw_hr |
 | dclaw-inventory | 8098 | 3009 | dclaw_inventory |
 | dclaw-project | 8100 | 3010 | dclaw_project |
-| dclaw-support | 8101 | 3014 | dclaw_support |
+| dclaw-support | 8102 | 3016 | dclaw_support |
 | dclaw-marketing | 8102 | 3015 | dclaw_marketing |
 | dclaw-real-estate | 8103 | 3016 | dclaw_real_estate |
 | dclaw-sales | 8104 | 3017 | dclaw_sales |
