@@ -20,6 +20,10 @@ from app.models.site_audit import SiteAudit
 from app.models.keyword import Keyword
 from app.models.content_optimization import ContentOptimization
 from app.models.ranking import Ranking
+from app.repositories.content_optimization import ContentOptimizationRepository
+from app.repositories.keyword import KeywordRepository
+from app.repositories.ranking import RankingRepository
+from app.repositories.site_audit import SiteAuditRepository
 
 
 async def run_site_audit(db: AsyncSession, request: AuditRequest) -> AuditResponse:
@@ -32,8 +36,7 @@ async def run_site_audit(db: AsyncSession, request: AuditRequest) -> AuditRespon
     if score > 85:
         issues = [i for i in issues if i.severity != "error"]
     audit = SiteAudit(url=request.url, score=score, issues=str([i.model_dump() for i in issues]))
-    db.add(audit)
-    await db.commit()
+    await SiteAuditRepository(db).create(audit)
     return AuditResponse(url=request.url, score=score, issues=issues, created_at=datetime.utcnow())
 
 
@@ -61,8 +64,7 @@ async def research_keywords(db: AsyncSession, request: KeywordRequest) -> Keywor
         difficulty=suggestions[0].difficulty,
         suggestions=str([s.model_dump() for s in suggestions]),
     )
-    db.add(kw)
-    await db.commit()
+    await KeywordRepository(db).create(kw)
     return KeywordResponse(seed=request.seed, suggestions=suggestions)
 
 
@@ -85,8 +87,7 @@ async def optimize_content(db: AsyncSession, request: ContentOptimizeRequest) ->
         optimized_content=optimized,
         suggestions=str([s.model_dump() for s in suggestions]),
     )
-    db.add(record)
-    await db.commit()
+    await ContentOptimizationRepository(db).create(record)
     return ContentOptimizeResponse(
         target_keyword=request.target_keyword,
         optimized_content=optimized,
@@ -103,6 +104,5 @@ async def track_rankings(db: AsyncSession, request: RankingsTrackRequest) -> Ran
         comp = max(1, pos + random.randint(-3, 3))
         history.append(RankDataPoint(date=date, position=pos, competitor_position=comp))
     ranking = Ranking(keyword=request.keyword, url=request.url, position=history[-1].position)
-    db.add(ranking)
-    await db.commit()
+    await RankingRepository(db).create(ranking)
     return RankingsTrackResponse(keyword=request.keyword, url=request.url, history=history)
