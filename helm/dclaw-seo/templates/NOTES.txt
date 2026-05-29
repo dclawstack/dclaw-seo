@@ -1,0 +1,20 @@
+DClaw SEO {{ .Chart.AppVersion }} deployed as release "{{ .Release.Name }}".
+
+Components:
+  - backend  ({{ .Values.image.registry }}/{{ .Values.backend.repository }}:{{ .Values.image.tag }})
+  {{- if .Values.frontend.enabled }}
+  - frontend ({{ .Values.image.registry }}/{{ .Values.frontend.repository }}:{{ .Values.image.tag }})
+  {{- end }}
+  {{- if .Values.postgresql.enabled }}
+  - CloudNativePG cluster "{{ include "dclaw-seo.fullname" . }}-db" ({{ .Values.postgresql.instances }} instance(s))
+  {{- end }}
+
+{{- if .Values.ingress.enabled }}
+App URL: https://{{ .Values.ingress.host }}
+{{- end }}
+
+Health:  kubectl exec deploy/{{ include "dclaw-seo.fullname" . }}-backend -- wget -qO- localhost:{{ .Values.backend.port }}/admin/health
+Metrics: {{ include "dclaw-seo.fullname" . }}-backend:{{ .Values.service.backendPort }}/metrics
+
+Remember to override secrets at install time (do not ship defaults):
+  --set secrets.secretKey=... --set postgresql.password=...

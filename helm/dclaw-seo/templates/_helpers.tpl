@@ -30,3 +30,12 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/name: {{ include "dclaw-seo.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/* ServiceAccount name */}}
+{{- define "dclaw-seo.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "dclaw-seo.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}

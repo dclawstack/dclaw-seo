@@ -5,14 +5,61 @@ on:
     workflows: ["Build Backend", "Build Frontend"]
     types: [completed]
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        type: choice
+        options: [staging, production]
+        default: staging
 
 jobs:
-  deploy:
+  # Always validate the chart — runs with no cluster, gates bad manifests.
+  validate-chart:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main' }}
-
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - name: helm lint
+        run: helm lint helm/dclaw-seo
+      - name: helm template (staging + production)
+        run: |
+          helm template dclaw-seo helm/dclaw-seo -f helm/dclaw-seo/values-staging.yaml >/dev/null
+          helm template dclaw-seo helm/dclaw-seo -f helm/dclaw-seo/values-production.yaml >/dev/null
 
-      - name: Deploy to Kubernetes
-        run: echo "Deploy step placeholder — configure kubectl and helm upgrade here"
+  deploy:
+    needs: validate-chart
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+
+      - name: Configure kubeconfig
+        id: kube
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        run: |
+          if [ -z "$KUBE_CONFIG" ]; then
+            echo "KUBE_CONFIG secret not set — skipping live deploy (chart already validated)."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            mkdir -p "$HOME/.kube"
+            echo "$KUBE_CONFIG" | base64 -d > "$HOME/.kube/config"
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: helm upgrade --install
+        if: steps.kube.outputs.ready == 'true'
+        env:
+          ENV: ${{ github.event.inputs.environment || 'staging' }}
+          TAG: ${{ github.sha }}
+        run: |
+          helm upgrade --install dclaw-seo helm/dclaw-seo \
+            --namespace dclaw-seo --create-namespace \
+            -f "helm/dclaw-seo/values-${ENV}.yaml" \
+            --set image.tag="$TAG" \
+            --set secrets.secretKey="${{ secrets.APP_SECRET_KEY }}" \
+            --set postgresql.password="${{ secrets.DB_PASSWORD }}" \
+            --wait --timeout 5m

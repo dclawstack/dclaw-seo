@@ -4,14 +4,17 @@ kind: Cluster
 metadata:
   name: {{ include "dclaw-seo.fullname" . }}-db
   labels:
-    app.kubernetes.io/name: {{ include "dclaw-seo.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "dclaw-seo.labels" . | nindent 4 }}
 spec:
-  instances: 1
+  instances: {{ .Values.postgresql.instances }}
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
   storage:
     size: {{ .Values.postgresql.storage }}
   bootstrap:
     initdb:
-      database: dclaw_seo
-      owner: dclaw_seo
+      database: {{ .Values.postgresql.database }}
+      owner: {{ .Values.postgresql.username }}
+      # Use the chart-managed credentials so the app's DATABASE_URL matches.
+      secret:
+        name: {{ include "dclaw-seo.fullname" . }}-db-creds
 {{- end }}

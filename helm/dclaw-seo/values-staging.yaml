@@ -1,0 +1,16 @@
+# Staging overrides — `helm upgrade --install dclaw-seo helm/dclaw-seo -f helm/dclaw-seo/values-staging.yaml`
+replicaCount: 1
+
+config:
+  appEnv: staging
+
+ingress:
+  host: seo-staging.dclawstack.io
+  tls:
+    secretName: dclaw-seo-staging-tls
+
+postgresql:
+  storage: 5Gi
+
+autoscaling:
+  enabled: false
