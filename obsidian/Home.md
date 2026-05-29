@@ -10,6 +10,7 @@
 - [[Project Overview]] — what DClaw SEO is and who it's for
 - [[Architecture]] — stack, ports, directory layout, anti-patterns
 - [[Roadmap]] — P0 → P1 → P2 feature plan
+- [[Dev Plan]] — phase-wise build plan (mirrored to Neon + GitHub Project #6)
 - [[Open Issues]] — known gaps and scaffold inconsistencies
 - [[Glossary]] — terms and acronyms
 
