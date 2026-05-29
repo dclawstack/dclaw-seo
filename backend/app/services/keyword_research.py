@@ -17,7 +17,8 @@ from app.models.keyword import Keyword
 from app.repositories.keyword import KeywordRepository
 from app.schemas.seo import KeywordRequest, KeywordResponse, KeywordSuggestion
 from app.services import seo_data
-from app.services.llm import LLMError, LLMNotConfigured, Message, llm_service
+from app.services.llm import LLMConfig, LLMError, LLMNotConfigured, Message, llm_service
+from app.services.llm_config import get_effective_config
 
 logger = get_logger(__name__)
 
@@ -43,14 +44,17 @@ def _parse_json_array(raw: str) -> list | None:
         return None
 
 
-async def _enrich_with_llm(seed: str, terms: list[str]) -> list[KeywordSuggestion] | None:
+async def _enrich_with_llm(
+    seed: str, terms: list[str], config: LLMConfig
+) -> list[KeywordSuggestion] | None:
     prompt = f'Seed keyword: "{seed}"\nKeywords:\n' + "\n".join(f"- {t}" for t in terms)
     try:
         raw = await llm_service.complete(
             [
                 Message(role="system", content=_ENRICH_SYSTEM),
                 Message(role="user", content=prompt),
-            ]
+            ],
+            config=config,
         )
     except LLMNotConfigured:
         return None
@@ -84,7 +88,8 @@ async def research_keywords(
     provider = provider or seo_data.keyword_provider
     terms = await provider.expand(request.seed, target=50)  # may raise ProviderUnavailable
 
-    enriched = await _enrich_with_llm(request.seed, terms) if terms else None
+    cfg = await get_effective_config(db)
+    enriched = await _enrich_with_llm(request.seed, terms, cfg) if terms else None
     if enriched is not None:
         suggestions, llm_enriched, note = enriched, True, None
     else:

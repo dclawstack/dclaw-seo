@@ -44,6 +44,18 @@ export async function getStats() {
   return apiFetch("/api/v1/seo/stats");
 }
 
+export async function getLLMSettings() {
+  return apiFetch("/api/v1/settings/llm");
+}
+
+export async function updateLLMSettings(body: Record<string, string>) {
+  return apiFetch("/api/v1/settings/llm", { method: "PUT", body: JSON.stringify(body) });
+}
+
+export async function testLLM() {
+  return apiFetch("/api/v1/settings/llm/test", { method: "POST" });
+}
+
 export async function copilotAnalyze(url: string, question?: string) {
   return apiFetch("/api/v1/ai/copilot", {
     method: "POST",

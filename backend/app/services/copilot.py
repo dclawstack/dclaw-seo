@@ -20,7 +20,7 @@ from app.core.config import settings
 from app.core.logging import get_logger
 from app.schemas.ai import CopilotAction, CopilotResponse, PageSignals
 from app.services.content_optimizer import analyze
-from app.services.llm import LLMError, LLMNotConfigured, Message, llm_service
+from app.services.llm import LLMConfig, LLMError, LLMNotConfigured, Message, llm_service
 
 logger = get_logger(__name__)
 
@@ -137,7 +137,10 @@ def _parse_actions(raw: str) -> list[CopilotAction] | None:
 
 
 async def _llm_refine(
-    s: PageSignals, baseline: list[CopilotAction], question: str | None
+    s: PageSignals,
+    baseline: list[CopilotAction],
+    question: str | None,
+    config: LLMConfig,
 ) -> list[CopilotAction] | None:
     payload = {
         "signals": s.model_dump(),
@@ -149,7 +152,8 @@ async def _llm_refine(
             [
                 Message(role="system", content=_SYSTEM),
                 Message(role="user", content=json.dumps(payload)),
-            ]
+            ],
+            config=config,
         )
     except LLMNotConfigured:
         return None
@@ -163,14 +167,18 @@ async def _llm_refine(
 
 
 async def analyze_page(
-    url: str, question: str | None = None, fetcher: PageFetcher | None = None
+    url: str,
+    question: str | None = None,
+    fetcher: PageFetcher | None = None,
+    config: LLMConfig | None = None,
 ) -> CopilotResponse:
     fetch = fetcher or _default_fetch
     html = await fetch(url)  # may raise PageFetchError
     signals = extract_signals(html)
     baseline = _baseline_actions(signals)
 
-    refined = await _llm_refine(signals, baseline, question)
+    cfg = config or LLMConfig.from_settings()
+    refined = await _llm_refine(signals, baseline, question, cfg)
     if refined is not None:
         actions, llm_enriched, note = refined, True, None
     else:

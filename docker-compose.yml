@@ -24,6 +24,12 @@ services:
     environment:
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/dclaw_seo
       APP_ENV: production
+      # Default LLM points at a host-run Ollama (override anytime in Settings).
+      LLM_PROVIDER: auto
+      OLLAMA_URL: http://host.docker.internal:11434
+      OLLAMA_MODEL: llama3.2:3b
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "8095:8095"
     depends_on:
