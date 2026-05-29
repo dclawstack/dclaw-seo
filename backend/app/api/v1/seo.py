@@ -16,17 +16,24 @@ from app.schemas.seo import (
 )
 from app.schemas.competitor import CompetitorGapRequest, CompetitorGapResponse
 from app.schemas.content_brief import ContentBriefRequest, ContentBriefResponse
+from app.schemas.content_writer import ContentWriterRequest, ContentWriterResponse
+from app.schemas.meta_tags import MetaTagsRequest, MetaTagsResponse
 from app.schemas.performance import PerformanceRequest, PerformanceResponse
+from app.schemas.video_seo import VideoSeoRequest, VideoSeoResponse
 from app.services.backlinks import analyze_backlinks, list_backlinks
 from app.services.competitor import CompetitorFetchError, competitor_gap
 from app.services.content_brief import generate_brief
 from app.services.content_optimizer import optimize_content
+from app.services.content_writer import write_article
+from app.services.copilot import PageFetchError
 from app.services.keyword_research import research_keywords
+from app.services.meta_tags import generate_meta_tags
 from app.services.performance import PerfUnavailable, monitor_performance, performance_history
 from app.services.rank_tracker import track_rankings
 from app.services.seo_data import ProviderUnavailable
 from app.services.site_auditor import run_site_audit
 from app.services.stats import dashboard_stats
+from app.services.video_seo import optimize_video
 
 router = APIRouter(prefix="/seo", tags=["seo"])
 
@@ -66,6 +73,33 @@ async def content_brief(
 ) -> ContentBriefResponse:
     """Generate a content brief (outline, questions, length) from Suggest + LLM."""
     return await generate_brief(db, request)
+
+
+@router.post("/content/write", response_model=ContentWriterResponse)
+async def content_write(
+    request: ContentWriterRequest, db: AsyncSession = Depends(get_db)
+) -> ContentWriterResponse:
+    """Generate a long-form article draft (LLM) with an originality + fact-check pass."""
+    return await write_article(db, request)
+
+
+@router.post("/meta", response_model=MetaTagsResponse)
+async def meta_tags(
+    request: MetaTagsRequest, db: AsyncSession = Depends(get_db)
+) -> MetaTagsResponse:
+    """Generate optimized title/meta/OG tags + JSON-LD schema for a URL or content."""
+    try:
+        return await generate_meta_tags(db, request)
+    except PageFetchError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@router.post("/video", response_model=VideoSeoResponse)
+async def video_seo(
+    request: VideoSeoRequest, db: AsyncSession = Depends(get_db)
+) -> VideoSeoResponse:
+    """Optimize a video topic: 3 CTR title variants, description, tags, hashtags."""
+    return await optimize_video(db, request)
 
 
 @router.post("/rankings/track", response_model=RankingsTrackResponse)

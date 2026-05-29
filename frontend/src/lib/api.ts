@@ -93,3 +93,31 @@ export async function copilotAnalyze(url: string, question?: string) {
     body: JSON.stringify({ url, question }),
   });
 }
+
+export async function writeArticle(
+  keyword: string,
+  opts?: { tone?: string; target_words?: number }
+) {
+  return apiFetch("/api/v1/seo/content/write", {
+    method: "POST",
+    body: JSON.stringify({ keyword, ...opts }),
+  });
+}
+
+export async function generateMetaTags(input: {
+  url?: string;
+  content?: string;
+  keyword?: string;
+}) {
+  return apiFetch("/api/v1/seo/meta", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function optimizeVideo(topic: string, keywords?: string[]) {
+  return apiFetch("/api/v1/seo/video", {
+    method: "POST",
+    body: JSON.stringify({ topic, keywords }),
+  });
+}
