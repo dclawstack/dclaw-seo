@@ -155,23 +155,23 @@ status: P3
 
 ## 8. Scaffold Checklist
 
-Before marking this app "shipped", confirm:
+**Status: complete (v2.0, 2026-05-30).** All items confirmed shipped.
 
-- [ ] `frontend/` with Next.js 14+, Tailwind, shadcn/ui
-- [ ] `backend/` with FastAPI, Pydantic v2, SQLAlchemy 2.0, asyncpg
-- [ ] `docs/` with getting-started, guides, reference, releases, troubleshooting
-- [ ] `helm/` with Chart.yaml, values.yaml, templates (deployment, service, ingress, cloudnativepg)
-- [ ] `.github/workflows/` with build-backend.yml, build-frontend.yml, deploy.yml, claude.yml
-- [ ] `frontend/public/dclaw-manifest.json` for DPanel registration
-- [ ] `backend/tests/` with pytest + pytest-asyncio
-- [ ] `backend/alembic/` with initial migration
-- [ ] `Dockerfile` + `docker-compose.yml` with correct healthchecks
-- [ ] Health endpoint at `/health` returning `{"status":"ok"}`
-- [ ] `AGENTS.md` with per-repo instructions
-- [ ] `PLAN-v1.2.md` with feature roadmap
-- [ ] Port assigned from registry and documented
-- [ ] No hardcoded secrets — use `.env.example` + K8s Secrets
-- [ ] Non-root containers in Dockerfile
+- [x] `frontend/` with Next.js 14+, Tailwind, shadcn/ui
+- [x] `backend/` with FastAPI, Pydantic v2, SQLAlchemy 2.0, asyncpg
+- [x] `docs/` with getting-started, guides, reference, releases, troubleshooting (+ `USER_GUIDE.md`/`.pdf`)
+- [x] `helm/` with Chart.yaml, values.yaml, templates (deployment, service, ingress, cloudnativepg) — `helm/dclaw-seo`
+- [x] `.github/workflows/` with build-backend.yml, build-frontend.yml, deploy.yml, claude.yml (+ ci.yml)
+- [x] `frontend/public/dclaw-manifest.json` for DPanel registration
+- [x] `backend/tests/` with pytest + pytest-asyncio (92 tests)
+- [x] `backend/alembic/` with initial migration (+ migrations through tenancy/billing)
+- [x] `Dockerfile` + `docker-compose.yml` with correct healthchecks (+ `docker-compose.standalone.yml`)
+- [x] Health endpoint at `/health` returning `{"status":"ok"}` (+ `/admin/health`, `/metrics`)
+- [x] `AGENTS.md` with per-repo instructions
+- [x] `PLAN-v1.2.md` with feature roadmap
+- [x] Port assigned from registry and documented (8095 / 3006)
+- [x] No hardcoded secrets — use `.env.example` + K8s Secrets (see `SECURITY.md`)
+- [x] Non-root containers in Dockerfile (backend + frontend)
 
 ---
 
