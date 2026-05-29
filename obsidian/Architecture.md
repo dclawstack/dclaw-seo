@@ -26,7 +26,7 @@ backend/
     repositories/  CRUD layer (all DB access goes here)
     schemas/  Pydantic v2
     services/ business logic / AI
-  alembic/    migrations  ⚠️ missing in seo (see Open Issues)
+  alembic/    migrations (async env.py; 6 revisions through v1.2)
   tests/      conftest.py + pytest-asyncio
 frontend/
   src/app/         App Router pages

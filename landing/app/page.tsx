@@ -15,6 +15,11 @@ import {
   CheckCircle2,
   ChevronRight,
   Mail,
+  Link2,
+  Users,
+  Gauge,
+  ClipboardList,
+  SearchCheck,
 } from "lucide-react";
 
 function Github({ className }: { className?: string }) {
@@ -121,7 +126,7 @@ function Hero() {
 
           <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl">
             {[
-              { v: "5", l: "SEO Tools" },
+              { v: "10", l: "SEO Tools" },
               { v: "2", l: "LLM Providers" },
               { v: "0", l: "Paid Keys to Start" },
               { v: "100%", l: "Self-Hosted" },
@@ -233,6 +238,39 @@ const groups: FeatureGroup[] = [
         icon: ShieldCheck,
         title: "No fabricated data",
         body: "Estimates are clearly labeled qualitative bands. Real data where it's real; honest about what needs a provider key.",
+      },
+    ],
+  },
+  {
+    eyebrow: "Platform depth",
+    title: "Go beyond the basics.",
+    description:
+      "A full technical and competitive toolkit — crawl audits, backlinks, competitor gaps, content briefs, and Core Web Vitals.",
+    features: [
+      {
+        icon: SearchCheck,
+        title: "Technical Site Audit",
+        body: "Crawl your site and flag real issues — missing titles/meta, broken pages, thin content, slow responses — with a prioritized summary.",
+      },
+      {
+        icon: Link2,
+        title: "Backlink Analysis",
+        body: "Score backlink toxicity (heuristic + AI) and track new and lost links over time.",
+      },
+      {
+        icon: Users,
+        title: "Competitor Gap Analysis",
+        body: "Compare your keyword profile against a competitor's page and surface the topics they cover that you don't.",
+      },
+      {
+        icon: ClipboardList,
+        title: "AI Content Briefs",
+        body: "Generate an outline, questions to answer, target length, and secondary keywords for any topic in seconds.",
+      },
+      {
+        icon: Gauge,
+        title: "Core Web Vitals",
+        body: "Real Lighthouse performance via PageSpeed Insights, with historical trends and concrete recommendations.",
       },
     ],
   },

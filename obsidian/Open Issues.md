@@ -7,7 +7,7 @@
 | # | Gap | Severity | Fix |
 |---|-----|----------|-----|
 | 1 | ~~Missing Alembic migrations~~ ✅ **Resolved (F0.3)** | — | `alembic init -t async` + initial migration `db8a8e5e228a` |
-| 2 | Partial implementation | 🟡 | Expand backend services + frontend pages per P0 roadmap (Phase 1) |
+| 2 | ~~Partial implementation~~ ✅ **Resolved** | — | P0 (Phase 1, v1.0) + P1 (Phase 2, v1.2) features shipped end-to-end |
 
 ## Doc inconsistencies (worth resolving)
 
