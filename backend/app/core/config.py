@@ -33,6 +33,10 @@ class Settings(BaseSettings):
     # Default rate for cloud tokens; local Ollama is treated as $0 but still metered.
     llm_cost_per_1k_tokens_usd: float = 0.0
 
+    # --- Billing (Stripe); optional — local invoice math works without it ---
+    stripe_api_key: str = ""
+    stripe_base_url: str = "https://api.stripe.com/v1"
+
     # --- SMTP (scheduled white-label report delivery); optional ---
     smtp_host: str = ""
     smtp_port: int = 587

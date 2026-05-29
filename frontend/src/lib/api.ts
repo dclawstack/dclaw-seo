@@ -95,6 +95,23 @@ export async function createProject(name: string, domain?: string) {
   });
 }
 
+// --- Billing ---
+export async function getPlans() {
+  return apiFetch("/api/v1/billing/plans");
+}
+export async function getBillingAccount() {
+  return apiFetch("/api/v1/billing/account");
+}
+export async function subscribe(plan: string, seats: number) {
+  return apiFetch("/api/v1/billing/subscribe", {
+    method: "PUT",
+    body: JSON.stringify({ plan, seats }),
+  });
+}
+export async function getInvoicePreview() {
+  return apiFetch("/api/v1/billing/invoice/preview");
+}
+
 export async function auditSite(url: string) {
   return apiFetch("/api/v1/seo/audit", {
     method: "POST",

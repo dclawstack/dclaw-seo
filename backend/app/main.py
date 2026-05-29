@@ -9,6 +9,7 @@ from app.api.routes import health
 from app.api.v1 import (
     ai,
     auth,
+    billing,
     local_seo,
     reports,
     seo,
@@ -60,6 +61,7 @@ app.include_router(ai.router, prefix="/api/v1", dependencies=_protected)
 app.include_router(local_seo.router, prefix="/api/v1", dependencies=_protected)
 app.include_router(reports.router, prefix="/api/v1", dependencies=_protected)
 app.include_router(tenancy.router, prefix="/api/v1")
+app.include_router(billing.router, prefix="/api/v1")
 app.include_router(settings_router.router, prefix="/api/v1", dependencies=_protected)
 
 if __name__ == "__main__":
