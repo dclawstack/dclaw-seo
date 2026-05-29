@@ -4,16 +4,22 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.database import engine, Base
 from app.core.config import settings
+from app.core.logging import configure_logging, get_logger
 from app.api.routes import health
 from app.api.v1 import seo
+
+configure_logging()
+logger = get_logger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    logger.info("startup", app_env=settings.app_env, port=settings.api_port)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
     await engine.dispose()
+    logger.info("shutdown")
 
 
 app = FastAPI(title="DClaw SEO", version="0.1.0", lifespan=lifespan)
