@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
 
 from app.core.deps import get_db
 from app.schemas.seo import (
     AuditRequest,
     AuditResponse,
+    DashboardStats,
     KeywordRequest,
     KeywordResponse,
     ContentOptimizeRequest,
@@ -13,14 +13,20 @@ from app.schemas.seo import (
     RankingsTrackRequest,
     RankingsTrackResponse,
 )
-from app.services.seo_service import (
-    run_site_audit,
-    research_keywords,
-    optimize_content,
-    track_rankings,
-)
+from app.services.content_optimizer import optimize_content
+from app.services.keyword_research import research_keywords
+from app.services.rank_tracker import track_rankings
+from app.services.seo_data import ProviderUnavailable
+from app.services.seo_service import run_site_audit
+from app.services.stats import dashboard_stats
 
 router = APIRouter(prefix="/seo", tags=["seo"])
+
+
+@router.get("/stats", response_model=DashboardStats)
+async def stats(db: AsyncSession = Depends(get_db)) -> DashboardStats:
+    """Dashboard aggregates — real counts + recent activity from the DB."""
+    return await dashboard_stats(db)
 
 
 @router.post("/audit", response_model=AuditResponse)
@@ -31,8 +37,11 @@ async def audit(request: AuditRequest, db: AsyncSession = Depends(get_db)) -> Au
 
 @router.post("/keywords", response_model=KeywordResponse)
 async def keywords(request: KeywordRequest, db: AsyncSession = Depends(get_db)) -> KeywordResponse:
-    """Keyword research and suggestions."""
-    return await research_keywords(db, request)
+    """Keyword research: real Google Suggest expansion + optional LLM enrichment."""
+    try:
+        return await research_keywords(db, request)
+    except ProviderUnavailable as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
 @router.post("/content/optimize", response_model=ContentOptimizeResponse)
@@ -47,5 +56,5 @@ async def content_optimize(
 async def rankings_track(
     request: RankingsTrackRequest, db: AsyncSession = Depends(get_db)
 ) -> RankingsTrackResponse:
-    """Track keyword rankings over time."""
+    """Record a rank observation (SERP provider or manual) and return trend + alerts."""
     return await track_rankings(db, request)

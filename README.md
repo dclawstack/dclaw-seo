@@ -32,15 +32,45 @@ npm run dev
 docker-compose up --build
 ```
 
+## Demo (v1.0)
+
+From a fresh clone, with Postgres running and `DATABASE_URL` pointing at `dclaw_seo`:
+
+```bash
+cd backend
+pip install -e ".[dev]"
+alembic upgrade head
+PYTHONPATH=. python scripts/demo.py          # runs the full P0 flow in-process
+PYTHONPATH=. python scripts/export_openapi.py # writes backend/openapi.json
+```
+
+The demo exercises every P0 feature (health, audit, keyword research, content
+optimizer, rank tracking, AI copilot, dashboard stats). AI enrichment and live
+SERP positions activate once you configure a provider in `backend/.env`
+(`OLLAMA_*` / `OPENROUTER_*`); without one, real data + clear notes are returned.
+
+## AI Copilot — bring your own model
+
+Configure either provider in `backend/.env` (see `.env.example`):
+
+- **Ollama (local):** `OLLAMA_URL`, `OLLAMA_MODEL`
+- **OpenRouter (cloud):** `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`
+- `LLM_PROVIDER` = `auto` (local→cloud fallback) | `ollama` | `openrouter`
+
+Keyword data uses **Google Suggest** (free, no key). A paid SEO-data provider
+can be slotted in later for search volume / SERP positions.
+
 ## API Endpoints
 
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/health` | Health check |
+| GET | `/api/v1/seo/stats` | Dashboard aggregates |
 | POST | `/api/v1/seo/audit` | Site audit |
-| POST | `/api/v1/seo/keywords` | Keyword research |
-| POST | `/api/v1/seo/content/optimize` | Content optimization |
-| POST | `/api/v1/seo/rankings/track` | Rankings tracking |
+| POST | `/api/v1/seo/keywords` | Keyword research (Google Suggest + LLM) |
+| POST | `/api/v1/seo/content/optimize` | Content optimization + scoring |
+| POST | `/api/v1/seo/rankings/track` | Rank tracking + drop alerts |
+| POST | `/api/v1/ai/copilot` | AI SEO copilot — prioritized actions |
 
 ## Contributors
 

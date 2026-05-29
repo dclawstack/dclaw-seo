@@ -49,14 +49,37 @@ export default function KeywordsPage() {
         </Card>
         {result && (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Suggestions for &quot;{result.seed}&quot;</h3>
+            <h3 className="text-lg font-semibold">
+              {result.suggestions.length} suggestions for &quot;{result.seed}&quot;
+            </h3>
+            {result.note && (
+              <div className="p-3 bg-info-bg text-info rounded-md text-sm">{result.note}</div>
+            )}
             {result.suggestions.map((kw: any, i: number) => (
               <Card key={i}>
-                <CardContent className="flex items-center justify-between">
+                <CardContent className="flex flex-wrap items-center justify-between gap-2">
                   <span className="font-medium">{kw.term}</span>
-                  <div className="flex gap-4 text-sm text-fg-2">
-                    <span>Volume: {kw.search_volume.toLocaleString()}</span>
-                    <span>Difficulty: {kw.difficulty}</span>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {kw.intent && (
+                      <span className="px-2 py-1 rounded-pill bg-brand-soft text-brand-press capitalize">
+                        {kw.intent}
+                      </span>
+                    )}
+                    {kw.volume_band && (
+                      <span className="px-2 py-1 rounded-pill bg-bg-muted text-fg-1 capitalize">
+                        Vol: {kw.volume_band}
+                      </span>
+                    )}
+                    {kw.difficulty_band && (
+                      <span className="px-2 py-1 rounded-pill bg-bg-muted text-fg-1 capitalize">
+                        Diff: {kw.difficulty_band}
+                      </span>
+                    )}
+                    {kw.cluster && (
+                      <span className="px-2 py-1 rounded-pill bg-brand-soft text-brand-press">
+                        {kw.cluster}
+                      </span>
+                    )}
                   </div>
                 </CardContent>
               </Card>

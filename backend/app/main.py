@@ -6,7 +6,7 @@ from app.core.database import engine, Base
 from app.core.config import settings
 from app.core.logging import configure_logging, get_logger
 from app.api.routes import health
-from app.api.v1 import seo
+from app.api.v1 import ai, seo
 
 configure_logging()
 logger = get_logger(__name__)
@@ -34,6 +34,7 @@ app.add_middleware(
 
 app.include_router(health.router)
 app.include_router(seo.router, prefix="/api/v1")
+app.include_router(ai.router, prefix="/api/v1")
 
 if __name__ == "__main__":
     import uvicorn

@@ -17,3 +17,9 @@ class RankingRepository(BaseRepository[Ranking]):
             .limit(limit)
         )
         return result.scalars().all()
+
+    async def recent(self, limit: int = 5) -> Sequence[Ranking]:
+        result = await self.db.execute(
+            select(Ranking).order_by(Ranking.tracked_at.desc()).limit(limit)
+        )
+        return result.scalars().all()

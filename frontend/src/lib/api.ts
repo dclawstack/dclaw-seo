@@ -33,9 +33,20 @@ export async function optimizeContent(targetKeyword: string, content: string) {
   });
 }
 
-export async function trackRankings(keyword: string, url: string) {
+export async function trackRankings(keyword: string, url: string, position?: number) {
   return apiFetch("/api/v1/seo/rankings/track", {
     method: "POST",
-    body: JSON.stringify({ keyword, url }),
+    body: JSON.stringify({ keyword, url, position }),
+  });
+}
+
+export async function getStats() {
+  return apiFetch("/api/v1/seo/stats");
+}
+
+export async function copilotAnalyze(url: string, question?: string) {
+  return apiFetch("/api/v1/ai/copilot", {
+    method: "POST",
+    body: JSON.stringify({ url, question }),
   });
 }

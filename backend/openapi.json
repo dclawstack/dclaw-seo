@@ -1,0 +1,936 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "DClaw SEO",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "description": "Health check endpoint.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/seo/stats": {
+      "get": {
+        "tags": [
+          "seo"
+        ],
+        "summary": "Stats",
+        "description": "Dashboard aggregates \u2014 real counts + recent activity from the DB.",
+        "operationId": "stats_api_v1_seo_stats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardStats"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/seo/audit": {
+      "post": {
+        "tags": [
+          "seo"
+        ],
+        "summary": "Audit",
+        "description": "Run a site audit and return mock crawl results.",
+        "operationId": "audit_api_v1_seo_audit_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/seo/keywords": {
+      "post": {
+        "tags": [
+          "seo"
+        ],
+        "summary": "Keywords",
+        "description": "Keyword research: real Google Suggest expansion + optional LLM enrichment.",
+        "operationId": "keywords_api_v1_seo_keywords_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeywordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeywordResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/seo/content/optimize": {
+      "post": {
+        "tags": [
+          "seo"
+        ],
+        "summary": "Content Optimize",
+        "description": "Optimize content for a target keyword.",
+        "operationId": "content_optimize_api_v1_seo_content_optimize_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContentOptimizeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentOptimizeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/seo/rankings/track": {
+      "post": {
+        "tags": [
+          "seo"
+        ],
+        "summary": "Rankings Track",
+        "description": "Record a rank observation (SERP provider or manual) and return trend + alerts.",
+        "operationId": "rankings_track_api_v1_seo_rankings_track_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RankingsTrackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankingsTrackResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/copilot": {
+      "post": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Copilot",
+        "description": "AI SEO Copilot: analyze a page and return prioritized next actions.",
+        "operationId": "copilot_api_v1_ai_copilot_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CopilotRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CopilotResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActivityItem": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "label",
+          "at"
+        ],
+        "title": "ActivityItem"
+      },
+      "AuditRequest": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Url",
+            "description": "URL to audit"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "AuditRequest"
+      },
+      "AuditResponse": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/IssueItem"
+            },
+            "type": "array",
+            "title": "Issues"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url",
+          "score",
+          "issues",
+          "created_at"
+        ],
+        "title": "AuditResponse"
+      },
+      "ContentOptimizeRequest": {
+        "properties": {
+          "target_keyword": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Target Keyword"
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_keyword",
+          "content"
+        ],
+        "title": "ContentOptimizeRequest"
+      },
+      "ContentOptimizeResponse": {
+        "properties": {
+          "target_keyword": {
+            "type": "string",
+            "title": "Target Keyword"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "readability": {
+            "type": "number",
+            "title": "Readability"
+          },
+          "keyword_density": {
+            "type": "number",
+            "title": "Keyword Density"
+          },
+          "word_count": {
+            "type": "integer",
+            "title": "Word Count"
+          },
+          "optimized_content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Optimized Content"
+          },
+          "suggestions": {
+            "items": {
+              "$ref": "#/components/schemas/ContentSuggestion"
+            },
+            "type": "array",
+            "title": "Suggestions"
+          },
+          "llm_enriched": {
+            "type": "boolean",
+            "title": "Llm Enriched",
+            "default": false
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_keyword",
+          "score",
+          "readability",
+          "keyword_density",
+          "word_count",
+          "suggestions"
+        ],
+        "title": "ContentOptimizeResponse"
+      },
+      "ContentSuggestion": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "message"
+        ],
+        "title": "ContentSuggestion"
+      },
+      "CopilotAction": {
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "title": "Priority"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "priority",
+          "category",
+          "title",
+          "detail"
+        ],
+        "title": "CopilotAction"
+      },
+      "CopilotRequest": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Url",
+            "description": "Page URL to analyze"
+          },
+          "question": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Question",
+            "description": "Optional question for the copilot"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "CopilotRequest"
+      },
+      "CopilotResponse": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "signals": {
+            "$ref": "#/components/schemas/PageSignals"
+          },
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/CopilotAction"
+            },
+            "type": "array",
+            "title": "Actions"
+          },
+          "llm_enriched": {
+            "type": "boolean",
+            "title": "Llm Enriched",
+            "default": false
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url",
+          "summary",
+          "signals",
+          "actions"
+        ],
+        "title": "CopilotResponse"
+      },
+      "DashboardStats": {
+        "properties": {
+          "audits": {
+            "type": "integer",
+            "title": "Audits"
+          },
+          "keywords": {
+            "type": "integer",
+            "title": "Keywords"
+          },
+          "optimizations": {
+            "type": "integer",
+            "title": "Optimizations"
+          },
+          "rank_observations": {
+            "type": "integer",
+            "title": "Rank Observations"
+          },
+          "latest_audit_score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Audit Score"
+          },
+          "recent": {
+            "items": {
+              "$ref": "#/components/schemas/ActivityItem"
+            },
+            "type": "array",
+            "title": "Recent"
+          }
+        },
+        "type": "object",
+        "required": [
+          "audits",
+          "keywords",
+          "optimizations",
+          "rank_observations",
+          "recent"
+        ],
+        "title": "DashboardStats"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "IssueItem": {
+        "properties": {
+          "severity": {
+            "type": "string",
+            "title": "Severity"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "severity",
+          "message"
+        ],
+        "title": "IssueItem"
+      },
+      "KeywordRequest": {
+        "properties": {
+          "seed": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Seed",
+            "description": "Seed keyword"
+          }
+        },
+        "type": "object",
+        "required": [
+          "seed"
+        ],
+        "title": "KeywordRequest"
+      },
+      "KeywordResponse": {
+        "properties": {
+          "seed": {
+            "type": "string",
+            "title": "Seed"
+          },
+          "suggestions": {
+            "items": {
+              "$ref": "#/components/schemas/KeywordSuggestion"
+            },
+            "type": "array",
+            "title": "Suggestions"
+          },
+          "llm_enriched": {
+            "type": "boolean",
+            "title": "Llm Enriched",
+            "default": false
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "seed",
+          "suggestions"
+        ],
+        "title": "KeywordResponse"
+      },
+      "KeywordSuggestion": {
+        "properties": {
+          "term": {
+            "type": "string",
+            "title": "Term"
+          },
+          "intent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intent"
+          },
+          "volume_band": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Volume Band"
+          },
+          "difficulty_band": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Difficulty Band"
+          },
+          "cluster": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cluster"
+          }
+        },
+        "type": "object",
+        "required": [
+          "term"
+        ],
+        "title": "KeywordSuggestion"
+      },
+      "PageSignals": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "title_length": {
+            "type": "integer",
+            "title": "Title Length",
+            "default": 0
+          },
+          "meta_description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meta Description"
+          },
+          "meta_length": {
+            "type": "integer",
+            "title": "Meta Length",
+            "default": 0
+          },
+          "h1_count": {
+            "type": "integer",
+            "title": "H1 Count",
+            "default": 0
+          },
+          "word_count": {
+            "type": "integer",
+            "title": "Word Count",
+            "default": 0
+          },
+          "readability": {
+            "type": "number",
+            "title": "Readability",
+            "default": 0.0
+          }
+        },
+        "type": "object",
+        "title": "PageSignals"
+      },
+      "RankDataPoint": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "title": "Date"
+          },
+          "position": {
+            "type": "integer",
+            "title": "Position"
+          },
+          "competitor_position": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Competitor Position"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "position"
+        ],
+        "title": "RankDataPoint"
+      },
+      "RankingsTrackRequest": {
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Keyword"
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Url"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position",
+            "description": "Manually observed SERP position (real data, no SERP provider needed)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "keyword",
+          "url"
+        ],
+        "title": "RankingsTrackRequest"
+      },
+      "RankingsTrackResponse": {
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "title": "Keyword"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/RankDataPoint"
+            },
+            "type": "array",
+            "title": "History"
+          },
+          "alerts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Alerts",
+            "default": []
+          },
+          "serp_source": {
+            "type": "string",
+            "title": "Serp Source",
+            "default": "none"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "keyword",
+          "url",
+          "history"
+        ],
+        "title": "RankingsTrackResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
