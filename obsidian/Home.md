@@ -24,8 +24,8 @@
 | **App ID** | `seo` |
 | **Tagline** | Rank higher with AI |
 | **Category** | Marketing |
-| **Brand color** | `#10B981` |
-| **Maturity** | 🟡 Tier 2 — Partial (P0 partially implemented) |
+| **Brand color** | DKube purple `#7660A8` (supersedes the old emerald `#10B981`) |
+| **Maturity** | 🟢 v1.2 — Phase 2 complete (P0 + P1 features shipped); Phase 3/4 pending |
 | **Stack** | Next.js 14 · FastAPI · SQLAlchemy 2.0 · Postgres 16 |
 | **GitHub** | [dclawstack/dclaw-seo](https://github.com/dclawstack/dclaw-seo) |
 
@@ -44,14 +44,21 @@ obsidian/   This vault
 
 ## Frontend surfaces
 
-`/` · `/dashboard` · `/audit` · `/keywords` · `/content` · `/rankings` · `/settings`
+`/` · `/dashboard` · `/audit` · `/keywords` · `/content` · `/rankings` · `/backlinks` · `/competitor` · `/brief` · `/performance` · `/settings` — plus a global **AI Copilot** widget on every page.
 
-## API endpoints (README)
+## API endpoints (v1.2)
 
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/health` | Health check |
-| POST | `/api/v1/seo/audit` | Site audit |
-| POST | `/api/v1/seo/keywords` | Keyword research |
-| POST | `/api/v1/seo/content/optimize` | Content optimization |
-| POST | `/api/v1/seo/rankings/track` | Rankings tracking |
+| GET | `/api/v1/seo/stats` | Dashboard aggregates |
+| POST | `/api/v1/seo/audit` | Technical site audit (real crawl) |
+| POST | `/api/v1/seo/keywords` | Keyword research (Google Suggest + LLM) |
+| POST | `/api/v1/seo/content/optimize` | Content optimizer (score + checklist) |
+| POST | `/api/v1/seo/content/brief` | AI content brief |
+| POST | `/api/v1/seo/rankings/track` | Rank tracking + drop alerts |
+| POST/GET | `/api/v1/seo/backlinks[/analyze]` | Backlink toxicity + new/lost |
+| POST | `/api/v1/seo/competitor/gap` | Competitor gap analysis |
+| POST/GET | `/api/v1/seo/performance` | Core Web Vitals (PageSpeed Insights) |
+| POST | `/api/v1/ai/copilot` | AI SEO copilot — prioritized actions |
+| GET/PUT | `/api/v1/settings/llm` | In-app LLM provider config |
