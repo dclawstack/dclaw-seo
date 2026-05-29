@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Bot, X, ArrowRight, Loader2 } from "lucide-react";
 import { copilotAnalyze } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -11,6 +12,7 @@ export function CopilotWidget() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const pathname = usePathname();
 
   async function analyze(e: React.FormEvent) {
     e.preventDefault();
@@ -25,6 +27,9 @@ export function CopilotWidget() {
       setLoading(false);
     }
   }
+
+  // Hidden on the bare welcome splash.
+  if (pathname === "/") return null;
 
   return (
     <>
