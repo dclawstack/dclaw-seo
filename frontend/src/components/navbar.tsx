@@ -20,6 +20,7 @@ const nav = [
   { href: "/performance", label: "Performance" },
   { href: "/forecast", label: "Forecast" },
   { href: "/reports", label: "Reports" },
+  { href: "/account", label: "Account" },
   { href: "/settings", label: "Settings" },
 ];
 

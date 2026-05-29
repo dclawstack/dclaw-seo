@@ -22,10 +22,22 @@ def line(ok: bool, name: str, detail: str) -> None:
 
 
 async def main() -> None:
-    print("DClaw SEO — v1.0 demo flow\n")
+    print("DClaw SEO — demo flow\n")
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://demo") as c:
         r = await c.get("/health")
         line(r.status_code == 200, "health", r.json())
+
+        # Auth: register a demo org/user, then send the JWT on every call.
+        import time
+
+        email = f"demo+{int(time.time())}@dclaw.local"
+        r = await c.post(
+            "/api/v1/auth/register",
+            json={"email": email, "password": "demopassword", "org_name": "Demo Org"},
+        )
+        token = r.json().get("access_token", "")
+        line(r.status_code == 201, "auth register", f"org=Demo Org token={'yes' if token else 'no'}")
+        c.headers["Authorization"] = f"Bearer {token}"
 
         r = await c.post("/api/v1/seo/audit", json={"url": "https://example.com"})
         b = r.json()
@@ -69,6 +81,14 @@ async def main() -> None:
             r.status_code == 200,
             "dashboard stats",
             f"audits={b['audits']} keywords={b['keywords']} ranks={b['rank_observations']}",
+        )
+
+        r = await c.get("/api/v1/org/usage")
+        b = r.json()
+        line(
+            r.status_code == 200,
+            "llm cost ledger",
+            f"mtd=${b['month_to_date_cost_usd']:.4f} calls={len(b['recent'])} over_cap={b['over_cap']}",
         )
     print("\nDemo flow complete.")
 
