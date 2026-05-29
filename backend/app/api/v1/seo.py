@@ -14,11 +14,9 @@ from app.schemas.seo import (
 )
 from app.services.content_optimizer import optimize_content
 from app.services.keyword_research import research_keywords
+from app.services.rank_tracker import track_rankings
 from app.services.seo_data import ProviderUnavailable
-from app.services.seo_service import (
-    run_site_audit,
-    track_rankings,
-)
+from app.services.seo_service import run_site_audit
 
 router = APIRouter(prefix="/seo", tags=["seo"])
 
@@ -50,5 +48,5 @@ async def content_optimize(
 async def rankings_track(
     request: RankingsTrackRequest, db: AsyncSession = Depends(get_db)
 ) -> RankingsTrackResponse:
-    """Track keyword rankings over time."""
+    """Record a rank observation (SERP provider or manual) and return trend + alerts."""
     return await track_rankings(db, request)

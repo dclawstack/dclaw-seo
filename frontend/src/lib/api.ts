@@ -33,10 +33,10 @@ export async function optimizeContent(targetKeyword: string, content: string) {
   });
 }
 
-export async function trackRankings(keyword: string, url: string) {
+export async function trackRankings(keyword: string, url: string, position?: number) {
   return apiFetch("/api/v1/seo/rankings/track", {
     method: "POST",
-    body: JSON.stringify({ keyword, url }),
+    body: JSON.stringify({ keyword, url, position }),
   });
 }
 

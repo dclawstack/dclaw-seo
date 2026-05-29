@@ -20,6 +20,7 @@ import {
 export default function RankingsPage() {
   const [keyword, setKeyword] = useState("");
   const [url, setUrl] = useState("");
+  const [position, setPosition] = useState("");
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -27,7 +28,8 @@ export default function RankingsPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const data = await trackRankings(keyword, url);
+      const pos = position ? Number(position) : undefined;
+      const data = await trackRankings(keyword, url, pos);
       setResult(data);
     } catch (err) {
       alert("Tracking failed");
@@ -58,10 +60,22 @@ export default function RankingsPage() {
                 onChange={(e) => setUrl(e.target.value)}
                 className="flex-1"
               />
+              <Input
+                type="number"
+                min={1}
+                placeholder="Position (optional)"
+                value={position}
+                onChange={(e) => setPosition(e.target.value)}
+                className="w-44"
+              />
               <Button type="submit" disabled={loading}>
                 {loading ? "Tracking..." : "Track"}
               </Button>
             </form>
+            <p className="text-xs text-fg-2 mt-3">
+              Enter an observed SERP position to record a real data point. (A SERP-data provider can
+              be configured to fetch positions automatically.)
+            </p>
           </CardContent>
         </Card>
         {result && (
@@ -70,6 +84,19 @@ export default function RankingsPage() {
               Rankings for &quot;{result.keyword}&quot;
             </CardTitle>
             <CardContent>
+              {result.note && (
+                <div className="p-3 bg-info-bg text-info rounded-md text-sm">{result.note}</div>
+              )}
+              {result.alerts?.length > 0 && (
+                <ul className="mt-3 space-y-1">
+                  {result.alerts.map((a: string, i: number) => (
+                    <li key={i} className="p-2 bg-warning-bg text-warning rounded-md text-sm">
+                      ⚠ {a}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {result.history.length > 0 && (
               <div className="h-80 mt-4">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={result.history}>
@@ -95,6 +122,7 @@ export default function RankingsPage() {
                   </LineChart>
                 </ResponsiveContainer>
               </div>
+              )}
             </CardContent>
           </Card>
         )}

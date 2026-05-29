@@ -3,17 +3,12 @@ import json
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.ranking import Ranking
 from app.models.site_audit import SiteAudit
-from app.repositories.ranking import RankingRepository
 from app.repositories.site_audit import SiteAuditRepository
 from app.schemas.seo import (
     AuditRequest,
     AuditResponse,
     IssueItem,
-    RankDataPoint,
-    RankingsTrackRequest,
-    RankingsTrackResponse,
 )
 
 
@@ -46,27 +41,3 @@ async def run_site_audit(db: AsyncSession, request: AuditRequest) -> AuditRespon
     return AuditResponse(
         url=audit.url, score=audit.score, issues=stored, created_at=audit.created_at
     )
-
-
-async def track_rankings(
-    db: AsyncSession, request: RankingsTrackRequest
-) -> RankingsTrackResponse:
-    repo = RankingRepository(db)
-    key = f"{request.keyword}|{request.url}"
-    observation = Ranking(
-        keyword=request.keyword,
-        url=request.url,
-        position=_stable_int(key, 3, 25),  # TODO(P1): real SERP position check
-        competitor_position=_stable_int(f"{key}|comp", 1, 28),
-    )
-    await repo.create(observation)
-    rows = await repo.history(request.keyword, request.url)
-    history = [
-        RankDataPoint(
-            date=r.tracked_at.strftime("%Y-%m-%d"),
-            position=r.position,
-            competitor_position=r.competitor_position or r.position,
-        )
-        for r in rows
-    ]
-    return RankingsTrackResponse(keyword=request.keyword, url=request.url, history=history)

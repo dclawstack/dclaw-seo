@@ -63,15 +63,21 @@ class ContentOptimizeResponse(BaseModel):
 class RankingsTrackRequest(BaseModel):
     keyword: str = Field(..., min_length=1)
     url: str = Field(..., min_length=1)
+    position: Optional[int] = Field(
+        None, ge=1, description="Manually observed SERP position (real data, no SERP provider needed)"
+    )
 
 
 class RankDataPoint(BaseModel):
     date: str
     position: int
-    competitor_position: int
+    competitor_position: Optional[int] = None
 
 
 class RankingsTrackResponse(BaseModel):
     keyword: str
     url: str
     history: List[RankDataPoint]
+    alerts: List[str] = []
+    serp_source: str = "none"
+    note: Optional[str] = None
