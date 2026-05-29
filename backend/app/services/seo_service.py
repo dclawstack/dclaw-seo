@@ -4,11 +4,9 @@ import json
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.content_optimization import ContentOptimization
-from app.models.keyword import Keyword
 from app.models.ranking import Ranking
 from app.models.site_audit import SiteAudit
 from app.repositories.content_optimization import ContentOptimizationRepository
-from app.repositories.keyword import KeywordRepository
 from app.repositories.ranking import RankingRepository
 from app.repositories.site_audit import SiteAuditRepository
 from app.schemas.seo import (
@@ -18,9 +16,6 @@ from app.schemas.seo import (
     ContentOptimizeResponse,
     ContentSuggestion,
     IssueItem,
-    KeywordRequest,
-    KeywordResponse,
-    KeywordSuggestion,
     RankDataPoint,
     RankingsTrackRequest,
     RankingsTrackResponse,
@@ -56,36 +51,6 @@ async def run_site_audit(db: AsyncSession, request: AuditRequest) -> AuditRespon
     return AuditResponse(
         url=audit.url, score=audit.score, issues=stored, created_at=audit.created_at
     )
-
-
-async def research_keywords(db: AsyncSession, request: KeywordRequest) -> KeywordResponse:
-    seed = request.seed
-    suggestions = [
-        KeywordSuggestion(
-            term=f"{seed} tools",
-            search_volume=_stable_int(f"{seed} tools|vol", 1000, 50000),
-            difficulty=_stable_int(f"{seed} tools|diff", 10, 60),
-        ),
-        KeywordSuggestion(
-            term=f"best {seed}",
-            search_volume=_stable_int(f"best {seed}|vol", 2000, 80000),
-            difficulty=_stable_int(f"best {seed}|diff", 20, 70),
-        ),
-        KeywordSuggestion(
-            term=f"{seed} tutorial",
-            search_volume=_stable_int(f"{seed} tutorial|vol", 500, 25000),
-            difficulty=_stable_int(f"{seed} tutorial|diff", 5, 40),
-        ),
-    ]
-    kw = Keyword(
-        term=seed,
-        search_volume=suggestions[0].search_volume,
-        difficulty=suggestions[0].difficulty,
-        suggestions=json.dumps([s.model_dump() for s in suggestions]),
-    )
-    await KeywordRepository(db).create(kw)
-    stored = [KeywordSuggestion(**s) for s in json.loads(kw.suggestions)]
-    return KeywordResponse(seed=kw.term, suggestions=stored)
 
 
 async def optimize_content(

@@ -1,6 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
 
 from app.core.deps import get_db
 from app.schemas.seo import (
@@ -13,9 +12,10 @@ from app.schemas.seo import (
     RankingsTrackRequest,
     RankingsTrackResponse,
 )
+from app.services.keyword_research import research_keywords
+from app.services.seo_data import ProviderUnavailable
 from app.services.seo_service import (
     run_site_audit,
-    research_keywords,
     optimize_content,
     track_rankings,
 )
@@ -31,8 +31,11 @@ async def audit(request: AuditRequest, db: AsyncSession = Depends(get_db)) -> Au
 
 @router.post("/keywords", response_model=KeywordResponse)
 async def keywords(request: KeywordRequest, db: AsyncSession = Depends(get_db)) -> KeywordResponse:
-    """Keyword research and suggestions."""
-    return await research_keywords(db, request)
+    """Keyword research: real Google Suggest expansion + optional LLM enrichment."""
+    try:
+        return await research_keywords(db, request)
+    except ProviderUnavailable as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
 @router.post("/content/optimize", response_model=ContentOptimizeResponse)

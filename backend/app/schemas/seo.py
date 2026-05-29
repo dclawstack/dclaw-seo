@@ -25,13 +25,17 @@ class KeywordRequest(BaseModel):
 
 class KeywordSuggestion(BaseModel):
     term: str
-    search_volume: int
-    difficulty: int
+    intent: Optional[str] = None  # informational | transactional | navigational
+    volume_band: Optional[str] = None  # low | medium | high (LLM estimate, not a count)
+    difficulty_band: Optional[str] = None  # low | medium | high (LLM estimate)
+    cluster: Optional[str] = None
 
 
 class KeywordResponse(BaseModel):
     seed: str
     suggestions: List[KeywordSuggestion]
+    llm_enriched: bool = False
+    note: Optional[str] = None
 
 
 class ContentOptimizeRequest(BaseModel):
