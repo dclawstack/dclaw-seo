@@ -58,7 +58,7 @@ export default function ContentPage() {
             <Card>
               <CardTitle>Optimized Content</CardTitle>
               <CardContent>
-                <div className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
+                <div className="whitespace-pre-wrap bg-bg-muted p-4 rounded-md text-sm">
                   {result.optimized_content}
                 </div>
               </CardContent>
@@ -68,7 +68,7 @@ export default function ContentPage() {
               <CardContent>
                 <ul className="space-y-2">
                   {result.suggestions.map((s: any, i: number) => (
-                    <li key={i} className="p-3 bg-emerald-50 text-emerald-800 rounded-lg text-sm">
+                    <li key={i} className="p-3 bg-brand-soft text-brand-press rounded-md text-sm">
                       <span className="font-semibold capitalize">{s.type}</span>: {s.message}
                     </li>
                   ))}

@@ -12,6 +12,7 @@ Human-readable mirror of development progress. One row per completed task (Neon 
 | 2026-05-29 | F0.5 | Test baseline + CI green | Phase 0 | #5 | — | Fixed conftest import + health path; added `test_seo.py` (4 endpoints + validation); 7 passed, 90% coverage (target ≥70%) |
 | 2026-05-29 | F0.6 | structlog logging + config hygiene | Phase 0 | #6 | — | structlog setup (console/JSON); structured startup/shutdown logs; `SettingsConfigDict` (deprecation gone); structlog added to requirements |
 | 2026-05-29 | F0.7 | Docs accuracy pass | Phase 0 | #7 | — | Reconciled docs/reference (ports 8095/3006, API URL, health version, SEO endpoints); marked Alembic + DPanel manifest resolved in vault |
+| 2026-05-29 | F0.8 | Adopt DKube purple design system | Phase 0 | #33 | — | Ported `brand.css` `--dk-*` + Poppins (next/font) verbatim from dclaw-marketing; tailwind bound to tokens; restyled all components/pages off emerald→purple; favicons/manifest + `design/` kit; `npm run build` green (8 routes, no warnings); supersedes #10B981 |
 
 ## Related
 

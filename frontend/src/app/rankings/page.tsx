@@ -82,14 +82,14 @@ export default function RankingsPage() {
                       type="monotone"
                       dataKey="position"
                       name="Your Position"
-                      stroke="#10B981"
+                      stroke="var(--dk-purple-700)"
                       strokeWidth={2}
                     />
                     <Line
                       type="monotone"
                       dataKey="competitor_position"
                       name="Competitor"
-                      stroke="#EF4444"
+                      stroke="var(--dk-danger)"
                       strokeWidth={2}
                     />
                   </LineChart>
