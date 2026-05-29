@@ -5,6 +5,7 @@ from app.core.deps import get_db
 from app.schemas.seo import (
     AuditRequest,
     AuditResponse,
+    DashboardStats,
     KeywordRequest,
     KeywordResponse,
     ContentOptimizeRequest,
@@ -17,8 +18,15 @@ from app.services.keyword_research import research_keywords
 from app.services.rank_tracker import track_rankings
 from app.services.seo_data import ProviderUnavailable
 from app.services.seo_service import run_site_audit
+from app.services.stats import dashboard_stats
 
 router = APIRouter(prefix="/seo", tags=["seo"])
+
+
+@router.get("/stats", response_model=DashboardStats)
+async def stats(db: AsyncSession = Depends(get_db)) -> DashboardStats:
+    """Dashboard aggregates — real counts + recent activity from the DB."""
+    return await dashboard_stats(db)
 
 
 @router.post("/audit", response_model=AuditResponse)

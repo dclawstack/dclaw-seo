@@ -40,6 +40,10 @@ export async function trackRankings(keyword: string, url: string, position?: num
   });
 }
 
+export async function getStats() {
+  return apiFetch("/api/v1/seo/stats");
+}
+
 export async function copilotAnalyze(url: string, question?: string) {
   return apiFetch("/api/v1/ai/copilot", {
     method: "POST",

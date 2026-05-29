@@ -81,3 +81,18 @@ class RankingsTrackResponse(BaseModel):
     alerts: List[str] = []
     serp_source: str = "none"
     note: Optional[str] = None
+
+
+class ActivityItem(BaseModel):
+    type: str  # audit | keyword | content | ranking
+    label: str
+    at: datetime
+
+
+class DashboardStats(BaseModel):
+    audits: int
+    keywords: int
+    optimizations: int
+    rank_observations: int
+    latest_audit_score: Optional[int] = None
+    recent: List[ActivityItem]

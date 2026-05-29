@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 from typing import Generic, TypeVar
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.base import Base
@@ -29,3 +29,7 @@ class BaseRepository(Generic[ModelT]):
     async def list(self, limit: int = 100) -> Sequence[ModelT]:
         result = await self.db.execute(select(self.model).limit(limit))
         return result.scalars().all()
+
+    async def count(self) -> int:
+        result = await self.db.execute(select(func.count()).select_from(self.model))
+        return int(result.scalar_one())
