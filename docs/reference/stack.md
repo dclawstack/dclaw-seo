@@ -20,6 +20,8 @@
 
 | Service | Port |
 |---------|------|
-| Frontend | Varies by app |
-| Backend | Varies by app |
+| Frontend | 3006 |
+| Backend | 8095 |
 | Database | 5432 |
+
+> ⚠️ `8095/3006` is shared with `dclaw-crm` in the registry (collision deferred per owner — see `AGENTS.md`).

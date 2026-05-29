@@ -14,7 +14,7 @@
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `NEXT_PUBLIC_API_URL` | Backend API base URL | `/api` |
+| `NEXT_PUBLIC_API_URL` | Backend API base URL | `http://localhost:8095` |
 | `NEXT_PUBLIC_APP_NAME` | App display name | `DClaw SEO` |
 
 ## Kubernetes Resources

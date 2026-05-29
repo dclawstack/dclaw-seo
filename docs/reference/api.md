@@ -24,12 +24,21 @@ GET /health
 
 **Response:**
 ```json
-{"status": "ok"}
+{"status": "ok", "version": "0.1.0"}
 ```
 
-### App-Specific Endpoints
+### SEO Endpoints
 
-See the app's OpenAPI spec at `/openapi.json` for complete endpoint documentation.
+All under the `/api/v1/seo` prefix:
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/v1/seo/audit` | Run a site audit |
+| POST | `/api/v1/seo/keywords` | Keyword research & suggestions |
+| POST | `/api/v1/seo/content/optimize` | Optimize content for a target keyword |
+| POST | `/api/v1/seo/rankings/track` | Record + return rank-tracking history |
+
+See the OpenAPI spec at `/openapi.json` for full request/response schemas.
 
 ## Error Handling
 
