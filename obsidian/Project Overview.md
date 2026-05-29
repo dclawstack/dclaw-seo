@@ -17,7 +17,9 @@ The product targets teams that treat SEO as a measurable growth channel, drawing
 
 **Phase 1 complete — v1.0 (demo-ready).** All P0 product features shipped end-to-end: the AI Copilot (P0.1) with a provider-swappable LLM layer (P0.0, Ollama/OpenRouter), keyword research on free Google Suggest data + LLM enrichment (P0.2), a real content optimizer (P0.3), rank tracking with drop alerts (P0.4), a live dashboard (P0.5), and a scripted demo flow (P0.6). 23 backend tests green; marketing landing live at **dclaw-seo.vercel.app**.
 
-Design principle: real free data always works; AI enrichment and live SERP positions activate when a provider is configured in `backend/.env` — no fabricated metrics. Phases 2–4 (P1/P2 platform features + hardening: auth, billing, multi-tenant, observability, prod deploy) await go-ahead. See [[Roadmap]] and [[Open Issues]].
+Design principle: real free data always works; AI enrichment and live SERP positions activate when a provider is configured (in-app **Settings** or `backend/.env`) — no fabricated metrics.
+
+**Phase 2 complete (v1.2).** P1 platform features shipped: real deep-crawl site audit (P1.2), backlink toxicity + new/lost (P1.1), competitor gap analysis (P1.3), AI content briefs (P1.4), and Core Web Vitals via PageSpeed Insights (P1.5). Plus in-app LLM provider configuration running on local Ollama. 41 backend tests green; 11 SEO tools across the UI. Phases 3 (P2 vertical) and 4 (hardening: auth, billing, multi-tenant, observability, prod deploy) await go-ahead. See [[Roadmap]] and [[Open Issues]].
 
 ## Related
 
