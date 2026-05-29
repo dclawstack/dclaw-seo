@@ -1,12 +1,12 @@
 """Provider-agnostic LLM layer.
 
 One call site (`LLMService.complete`) backed by swappable providers:
-- **Ollama** (local) — configured via OLLAMA_URL / OLLAMA_MODEL
-- **OpenRouter** (cloud) — configured via OPENROUTER_API_KEY / OPENROUTER_MODEL
+- **Ollama** (local) — OLLAMA_URL / OLLAMA_MODEL
+- **OpenRouter** (cloud) — OPENROUTER_API_KEY / OPENROUTER_MODEL
 
-Selection is config-driven (`LLM_PROVIDER`): "ollama", "openrouter", or
-"auto" (try each configured provider in order, falling back on failure).
-Drop your Ollama endpoint or OpenRouter token into `backend/.env`.
+Configuration is carried in an :class:`LLMConfig`. The effective config is
+resolved at request time (DB overrides env — see ``services/llm_config.py``),
+so the provider/endpoint/token can be changed from the app without a restart.
 """
 
 from __future__ import annotations
@@ -35,12 +35,49 @@ class Message:
     content: str
 
 
+@dataclass
+class LLMConfig:
+    provider: str
+    ollama_url: str
+    ollama_model: str
+    openrouter_api_key: str
+    openrouter_base_url: str
+    openrouter_model: str
+    timeout: float = 60.0
+
+    @classmethod
+    def from_settings(cls) -> "LLMConfig":
+        return cls(
+            provider=settings.llm_provider,
+            ollama_url=settings.ollama_url,
+            ollama_model=settings.ollama_model,
+            openrouter_api_key=settings.openrouter_api_key,
+            openrouter_base_url=settings.openrouter_base_url,
+            openrouter_model=settings.openrouter_model,
+            timeout=settings.llm_timeout_seconds,
+        )
+
+    def is_configured(self, provider_name: str) -> bool:
+        if provider_name == "ollama":
+            return bool(self.ollama_url and self.ollama_model)
+        if provider_name == "openrouter":
+            return bool(self.openrouter_api_key and self.openrouter_model)
+        return False
+
+    def provider_order(self) -> list[str]:
+        pref = (self.provider or "auto").lower()
+        if pref in ("ollama", "openrouter"):
+            return [pref]
+        return ["ollama", "openrouter"]  # auto: local first, cloud fallback
+
+
 class OllamaProvider:
     name = "ollama"
 
-    def __init__(self) -> None:
-        self.url = settings.ollama_url.rstrip("/")
-        self.model = settings.ollama_model
+    def __init__(self, config: LLMConfig) -> None:
+        self.url = config.ollama_url.rstrip("/")
+        self.model = config.ollama_model
+        self.timeout = config.timeout
 
     async def complete(self, messages: list[Message], *, temperature: float) -> str:
         payload = {
@@ -49,20 +86,20 @@ class OllamaProvider:
             "stream": False,
             "options": {"temperature": temperature},
         }
-        async with httpx.AsyncClient(timeout=settings.llm_timeout_seconds) as client:
+        async with httpx.AsyncClient(timeout=self.timeout) as client:
             resp = await client.post(f"{self.url}/api/chat", json=payload)
             resp.raise_for_status()
-            data = resp.json()
-        return data["message"]["content"]
+            return resp.json()["message"]["content"]
 
 
 class OpenRouterProvider:
     name = "openrouter"
 
-    def __init__(self) -> None:
-        self.base_url = settings.openrouter_base_url.rstrip("/")
-        self.model = settings.openrouter_model
-        self.api_key = settings.openrouter_api_key
+    def __init__(self, config: LLMConfig) -> None:
+        self.base_url = config.openrouter_base_url.rstrip("/")
+        self.model = config.openrouter_model
+        self.api_key = config.openrouter_api_key
+        self.timeout = config.timeout
 
     async def complete(self, messages: list[Message], *, temperature: float) -> str:
         payload = {
@@ -71,30 +108,12 @@ class OpenRouterProvider:
             "temperature": temperature,
         }
         headers = {"Authorization": f"Bearer {self.api_key}"}
-        async with httpx.AsyncClient(timeout=settings.llm_timeout_seconds) as client:
+        async with httpx.AsyncClient(timeout=self.timeout) as client:
             resp = await client.post(
                 f"{self.base_url}/chat/completions", json=payload, headers=headers
             )
             resp.raise_for_status()
-            data = resp.json()
-        return data["choices"][0]["message"]["content"]
-
-
-def _is_configured(provider_name: str) -> bool:
-    if provider_name == "ollama":
-        return bool(settings.ollama_url and settings.ollama_model)
-    if provider_name == "openrouter":
-        return bool(settings.openrouter_api_key and settings.openrouter_model)
-    return False
-
-
-def _provider_order() -> list[str]:
-    """Resolve the ordered list of providers to attempt, per LLM_PROVIDER."""
-    pref = (settings.llm_provider or "auto").lower()
-    if pref in ("ollama", "openrouter"):
-        return [pref]
-    # "auto": local first, then cloud fallback (per REVISED-PRD §4)
-    return ["ollama", "openrouter"]
+            return resp.json()["choices"][0]["message"]["content"]
 
 
 _PROVIDERS = {"ollama": OllamaProvider, "openrouter": OpenRouterProvider}
@@ -107,17 +126,19 @@ class LLMService:
         self,
         messages: list[Message],
         *,
+        config: LLMConfig | None = None,
         temperature: float = 0.2,
     ) -> str:
-        candidates = [p for p in _provider_order() if _is_configured(p)]
+        cfg = config or LLMConfig.from_settings()
+        candidates = [p for p in cfg.provider_order() if cfg.is_configured(p)]
         if not candidates:
             raise LLMNotConfigured(
-                "No LLM provider configured. Set OLLAMA_URL/OLLAMA_MODEL or "
-                "OPENROUTER_API_KEY/OPENROUTER_MODEL in backend/.env."
+                "No LLM provider configured. Set an Ollama endpoint or an OpenRouter "
+                "token in Settings (or backend/.env)."
             )
         last_error: Exception | None = None
         for name in candidates:
-            provider = _PROVIDERS[name]()
+            provider = _PROVIDERS[name](cfg)
             try:
                 return await provider.complete(messages, temperature=temperature)
             except Exception as exc:  # try the next configured provider

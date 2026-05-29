@@ -21,7 +21,8 @@ from app.schemas.seo import (
     ContentOptimizeResponse,
     ContentSuggestion,
 )
-from app.services.llm import LLMError, LLMNotConfigured, Message, llm_service
+from app.services.llm import LLMConfig, LLMError, LLMNotConfigured, Message, llm_service
+from app.services.llm_config import get_effective_config
 
 logger = get_logger(__name__)
 
@@ -162,7 +163,7 @@ _REWRITE_SYSTEM = (
 )
 
 
-async def _llm_rewrite(keyword: str, content: str) -> str | None:
+async def _llm_rewrite(keyword: str, content: str, config: LLMConfig) -> str | None:
     try:
         return await llm_service.complete(
             [
@@ -171,7 +172,8 @@ async def _llm_rewrite(keyword: str, content: str) -> str | None:
                     role="user",
                     content=f"Target keyword: {keyword}\n\nContent:\n{content}",
                 ),
-            ]
+            ],
+            config=config,
         )
     except LLMNotConfigured:
         return None
@@ -187,7 +189,8 @@ async def optimize_content(
     score = _score(metrics)
     suggestions = _checklist(metrics, request.target_keyword)
 
-    optimized = await _llm_rewrite(request.target_keyword, request.content)
+    cfg = await get_effective_config(db)
+    optimized = await _llm_rewrite(request.target_keyword, request.content, cfg)
     llm_enriched = optimized is not None
     note = (
         None
