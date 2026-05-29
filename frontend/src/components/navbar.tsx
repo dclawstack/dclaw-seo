@@ -15,6 +15,7 @@ const nav = [
   { href: "/rankings", label: "Rankings" },
   { href: "/backlinks", label: "Backlinks" },
   { href: "/competitor", label: "Competitor" },
+  { href: "/local", label: "Local SEO" },
   { href: "/brief", label: "Content Brief" },
   { href: "/performance", label: "Performance" },
   { href: "/settings", label: "Settings" },

@@ -121,3 +121,45 @@ export async function optimizeVideo(topic: string, keywords?: string[]) {
     body: JSON.stringify({ topic, keywords }),
   });
 }
+
+// --- Local SEO ---
+export async function createBusiness(body: {
+  name: string;
+  address: string;
+  phone: string;
+  website?: string;
+}) {
+  return apiFetch("/api/v1/local/businesses", { method: "POST", body: JSON.stringify(body) });
+}
+
+export async function listBusinesses() {
+  return apiFetch("/api/v1/local/businesses");
+}
+
+export async function addCitation(
+  businessId: number,
+  body: { source: string; listed_name: string; listed_address: string; listed_phone: string; url?: string }
+) {
+  return apiFetch(`/api/v1/local/businesses/${businessId}/citations`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function napScan(businessId: number) {
+  return apiFetch(`/api/v1/local/businesses/${businessId}/nap-scan`);
+}
+
+export async function addReview(
+  businessId: number,
+  body: { source: string; author?: string; rating: number; text?: string }
+) {
+  return apiFetch(`/api/v1/local/businesses/${businessId}/reviews`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function listReviews(businessId: number) {
+  return apiFetch(`/api/v1/local/businesses/${businessId}/reviews`);
+}
