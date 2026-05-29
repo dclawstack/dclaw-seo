@@ -12,7 +12,15 @@ Human-readable mirror of development progress. One row per completed task (Neon 
 | 2026-05-29 | F0.5 | Test baseline + CI green | Phase 0 | #5 | — | Fixed conftest import + health path; added `test_seo.py` (4 endpoints + validation); 7 passed, 90% coverage (target ≥70%) |
 | 2026-05-29 | F0.6 | structlog logging + config hygiene | Phase 0 | #6 | — | structlog setup (console/JSON); structured startup/shutdown logs; `SettingsConfigDict` (deprecation gone); structlog added to requirements |
 | 2026-05-29 | F0.7 | Docs accuracy pass | Phase 0 | #7 | — | Reconciled docs/reference (ports 8095/3006, API URL, health version, SEO endpoints); marked Alembic + DPanel manifest resolved in vault |
-| 2026-05-29 | F0.8 | Adopt DKube purple design system | Phase 0 | #33 | — | Ported `brand.css` `--dk-*` + Poppins (next/font) verbatim from dclaw-marketing; tailwind bound to tokens; restyled all components/pages off emerald→purple; favicons/manifest + `design/` kit; `npm run build` green (8 routes, no warnings); supersedes #10B981 |
+| 2026-05-29 | F0.8 | Adopt DKube purple design system | Phase 0 | #33 | #35 | Ported `brand.css` `--dk-*` + Poppins (next/font) verbatim from dclaw-marketing; tailwind bound to tokens; restyled all components/pages off emerald→purple; favicons/manifest + `design/` kit; `npm run build` green (8 routes, no warnings); supersedes #10B981 |
+| 2026-05-29 | H.8 | Marketing landing page (live on Vercel) | Phase 4 | #34 | #36 | Standalone `landing/` Next 15 app (Tailwind v4 + lucide), DKube purple; deployed to **https://dclaw-seo.vercel.app** (200). Pulled forward on request |
+| 2026-05-29 | P0.0 | LLM provider abstraction (Ollama + OpenRouter) | Phase 1 | #8 | — | `services/llm.py` single call site; `LLM_PROVIDER` auto/ollama/openrouter + fallback; env config slots; 12 tests |
+| 2026-05-29 | P0.1 | AI SEO Copilot | Phase 1 | #9 | — | `POST /ai/copilot`: real page fetch + on-page signals + best-practice prioritized actions; LLM re-ranks when configured; floating widget in layout; 20 tests |
+| 2026-05-29 | P0.2 | Keyword Research & Clustering | Phase 1 | #10 | — | Real Google Suggest expansion (50, free/keyless) + LLM intent/bands/clustering; `suggestions` widened to Text (mig `37e17d00997e`); no fabricated numbers |
+| 2026-05-29 | P0.3 | Content Optimizer | Phase 1 | #11 | — | Real Flesch readability + keyword-density score 0–100 + data-driven checklist; LLM optional rewrite; works without LLM |
+| 2026-05-29 | P0.4 | Rank Tracking & SERP Monitoring | Phase 1 | #12 | — | Pluggable SERP provider (NullSERPProvider default) + manual real positions; >5-drop alerts; never fabricated |
+| 2026-05-29 | P0.5 | Dashboard | Phase 1 | #13 | — | `GET /seo/stats` real counts + latest score + recent activity (repo `count()`/`recent()`); dashboard cards wired to live data |
+| 2026-05-29 | P0.6 | v1.0 demo wiring + smoke | Phase 1 | #14 | — | `scripts/demo.py` full P0 flow (all ✓) + `export_openapi.py`; frontend Dockerfile `ARG NEXT_PUBLIC_API_URL`; compose config valid; README runbook |
 
 ## Related
 

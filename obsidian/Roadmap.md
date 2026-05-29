@@ -6,14 +6,19 @@ From `REVISED-PRD.md` v2.3 and `PLAN-v1.2.md`. Every P0 must ship with an AI Cop
 
 Scaffold hardening shipped: ports/config reconciled, repository layer, Alembic migrations, real (no-mock) persistence, test baseline (7 passed / 90% cov), structlog, docs accuracy, and the DKube purple design system. Product features below begin in **Phase 1**.
 
-## P0 — Must have (demo-ready)
+## P0 — Must have (demo-ready) — ✅ shipped in v1.0 (Phase 1)
 
-| # | Feature | AI component | Acceptance |
-|---|---------|--------------|------------|
-| P0.1 | **AI SEO Copilot** | LLM strategy gen + SERP analysis | Audit 100 pages <60s; top-10 prioritised actions |
-| P0.2 | **Keyword Research** | Long-tail expansion + intent classification | 50+ keywords; classify info/transact/nav |
-| P0.3 | **Content Optimizer** | Readability + density + semantic coverage | Score 0–100; 5+ improvements/page |
-| P0.4 | **Rank Tracking** | Rank-fluctuation anomaly detection | Daily checks; 1000+ keywords; alert on >5 drop |
+| # | Feature | Status | Notes |
+|---|---------|--------|-------|
+| P0.0 | **LLM provider abstraction** | ✅ | Ollama + OpenRouter, config-driven, fallback |
+| P0.1 | **AI SEO Copilot** | ✅ | Page fetch + on-page signals → prioritized actions; floating widget |
+| P0.2 | **Keyword Research** | ✅ | Real Google Suggest (free) + LLM intent/bands/clustering |
+| P0.3 | **Content Optimizer** | ✅ | Real readability + density score 0–100 + checklist; LLM rewrite |
+| P0.4 | **Rank Tracking** | ✅ | Pluggable SERP provider + manual positions; >5-drop alerts |
+| P0.5 | **Dashboard** | ✅ | Real `/seo/stats` (counts + recent activity) |
+| P0.6 | **Demo wiring + smoke** | ✅ | Full P0 flow script + OpenAPI export |
+
+> **AI enrichment + live SERP** activate when an LLM / SERP-data provider is configured; without one, real free data + honest notes are returned (no fabricated metrics).
 
 ## P1 — Should have (v1.1–1.2)
 
