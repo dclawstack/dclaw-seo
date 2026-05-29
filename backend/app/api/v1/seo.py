@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.deps import get_db
+from app.schemas.backlinks import BacklinkAnalyzeRequest, BacklinkAnalyzeResponse
 from app.schemas.seo import (
     AuditRequest,
     AuditResponse,
@@ -13,6 +14,7 @@ from app.schemas.seo import (
     RankingsTrackRequest,
     RankingsTrackResponse,
 )
+from app.services.backlinks import analyze_backlinks, list_backlinks
 from app.services.content_optimizer import optimize_content
 from app.services.keyword_research import research_keywords
 from app.services.rank_tracker import track_rankings
@@ -58,3 +60,19 @@ async def rankings_track(
 ) -> RankingsTrackResponse:
     """Record a rank observation (SERP provider or manual) and return trend + alerts."""
     return await track_rankings(db, request)
+
+
+@router.post("/backlinks/analyze", response_model=BacklinkAnalyzeResponse)
+async def backlinks_analyze(
+    request: BacklinkAnalyzeRequest, db: AsyncSession = Depends(get_db)
+) -> BacklinkAnalyzeResponse:
+    """Analyze backlinks for toxicity + detect new/lost (provider or supplied links)."""
+    return await analyze_backlinks(db, request)
+
+
+@router.get("/backlinks", response_model=BacklinkAnalyzeResponse)
+async def backlinks_list(
+    target_url: str, db: AsyncSession = Depends(get_db)
+) -> BacklinkAnalyzeResponse:
+    """List stored backlinks for a target."""
+    return await list_backlinks(db, target_url)

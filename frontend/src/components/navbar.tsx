@@ -10,6 +10,7 @@ const nav = [
   { href: "/keywords", label: "Keywords" },
   { href: "/content", label: "Content" },
   { href: "/rankings", label: "Rankings" },
+  { href: "/backlinks", label: "Backlinks" },
   { href: "/settings", label: "Settings" },
 ];
 

@@ -44,6 +44,16 @@ export async function getStats() {
   return apiFetch("/api/v1/seo/stats");
 }
 
+export async function analyzeBacklinks(
+  targetUrl: string,
+  links: { source_url: string; anchor_text?: string }[]
+) {
+  return apiFetch("/api/v1/seo/backlinks/analyze", {
+    method: "POST",
+    body: JSON.stringify({ target_url: targetUrl, links }),
+  });
+}
+
 export async function getLLMSettings() {
   return apiFetch("/api/v1/settings/llm");
 }
