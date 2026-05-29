@@ -43,3 +43,13 @@ Run the dependency vulnerability scan locally:
 ```
 
 CI runs `pip-audit` on every push (non-blocking, see `.github/workflows/ci.yml`).
+
+### Known / tracked advisories
+
+- **Frontend `next`** bumped `14.2.5 → 14.2.35` (latest 14.2 patch) to clear the
+  critical advisory flagged by `npm`. Remaining `npm audit` items on the Next 14
+  line require a **Next 15 major upgrade**, tracked as separate follow-up work
+  (App Router migration) rather than a blind bump.
+- **Backend `pytest`** (CVE-2025-71176) is a **test-only** dependency in the
+  `[dev]` extra — it is not installed in the production image
+  (`pip install -e ".[prod]"`), so it carries no runtime exposure.
