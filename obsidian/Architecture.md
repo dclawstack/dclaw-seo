@@ -34,15 +34,15 @@ frontend/
   src/lib/         api.ts (typed fetch) · utils.ts (cn())
 ```
 
-## Ports ⚠️ (inconsistent across docs — see [[Open Issues]])
+## Ports ✅ (canonical, reconciled in F0.1)
+
+Canonical pair = **backend `8095` / frontend `3006`** (README values), now propagated to `AGENTS.md`, `REVISED-PRD.md`, and `docker-compose.yml`. DB name is `dclaw_seo` (fixed `.env.example` which pointed at `dclaw_crm`).
 
 | Source | Frontend | Backend |
 |--------|----------|---------|
-| `README.md` quick-start | 3006 | 8095 |
-| `AGENTS.md` app identity | 3008 | 8008 |
-| `REVISED-PRD.md` (TBD) | 3098 | 18168 |
+| `README.md` / `AGENTS.md` / `REVISED-PRD.md` / compose | 3006 | 8095 |
 
-> The README's `3006 / 8095` is what the quick-start actually uses. Note that `8095 / 3006` collides with `dclaw-crm` in the shared port registry — a port needs to be formally assigned. DB name is `dclaw_seo`.
+> ⚠️ `8095 / 3006` still collides with `dclaw-crm` in the shared port registry — re-assignment is a platform-level decision, **deferred per owner** (documented in `AGENTS.md`).
 
 ## Architecture lock — DO NOT CHANGE
 

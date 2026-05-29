@@ -25,8 +25,8 @@ status: P3
 | **Tagline** | Rank higher with AI |
 | **Color** | #10B981 |
 | **Phase** | P3 |
-| **Port (Frontend Dev)** | 3098 (TBD — assign before build) |
-| **Port (Backend Dev)** | 18168 (TBD — assign before build) |
+| **Port (Frontend Dev)** | 3006 |
+| **Port (Backend Dev)** | 8095 |
 | **Maturity Tier** | 🟡 Tier 2 — Partial |
 
 ---

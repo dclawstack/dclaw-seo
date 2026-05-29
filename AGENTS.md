@@ -7,8 +7,8 @@
 
 **DClaw SEO** is a vertical SaaS application built on the DClaw Stack.
 
-- **Backend Port:** `8008` (FastAPI)
-- **Frontend Port:** `3008` (Next.js)
+- **Backend Port:** `8095` (FastAPI)
+- **Frontend Port:** `3006` (Next.js)
 - **Database:** `dclaw_seo` (PostgreSQL)
 - **Base API Path:** `/api/v1`
 
@@ -35,7 +35,7 @@ These are non-negotiable. If an agent suggests changing them, reject it.
 
 ### Docker
 - **Backend:** `python:3.11-slim`, non-root `appuser`, healthcheck with `python urllib.request.urlopen()`
-- **Frontend:** `node:20-alpine`, port `3008`
+- **Frontend:** `node:20-alpine`, port `3006`
 - **Compose:** container port MUST match `EXPOSE`/`ENV PORT`
 
 ## Directory Structure
@@ -182,3 +182,6 @@ Available components:
 | dclaw-vendor | 8106 | 3019 | dclaw_vendor |
 | dclaw-doc | 8107 | 3020 | dclaw_doc |
 | dclaw-calendar | 8108 | 3021 | dclaw_calendar |
+| dclaw-seo | 8095 | 3006 | dclaw_seo |
+
+> ⚠️ **Known collision (resolution deferred per owner):** `dclaw-seo` currently shares `8095/3006` with `dclaw-crm`. The canonical pair `8095/3006` is used everywhere in this repo (README/AGENTS/REVISED-PRD/compose); re-assignment of one of the two apps is tracked as a platform-level decision and is intentionally not resolved here.
