@@ -17,7 +17,7 @@ from app.services.content_optimizer import optimize_content
 from app.services.keyword_research import research_keywords
 from app.services.rank_tracker import track_rankings
 from app.services.seo_data import ProviderUnavailable
-from app.services.seo_service import run_site_audit
+from app.services.site_auditor import run_site_audit
 from app.services.stats import dashboard_stats
 
 router = APIRouter(prefix="/seo", tags=["seo"])
@@ -31,7 +31,7 @@ async def stats(db: AsyncSession = Depends(get_db)) -> DashboardStats:
 
 @router.post("/audit", response_model=AuditResponse)
 async def audit(request: AuditRequest, db: AsyncSession = Depends(get_db)) -> AuditResponse:
-    """Run a site audit and return mock crawl results."""
+    """Run a real technical site audit (bounded internal crawl)."""
     return await run_site_audit(db, request)
 
 

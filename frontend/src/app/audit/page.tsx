@@ -51,7 +51,13 @@ export default function AuditPage() {
           <Card>
             <CardTitle>Results for {result.url}</CardTitle>
             <CardContent>
-              <p className="text-3xl font-bold text-brand mb-4">Score: {result.score}</p>
+              <div className="flex items-baseline gap-4 mb-3">
+                <p className="text-3xl font-bold text-brand">Score: {result.score}</p>
+                <span className="text-sm text-fg-2">{result.pages_crawled} page(s) crawled</span>
+              </div>
+              {result.summary && (
+                <p className="mb-4 p-3 bg-bg-muted rounded-md text-sm text-fg-1">{result.summary}</p>
+              )}
               <ul className="space-y-2">
                 {result.issues.map((issue: any, i: number) => (
                   <li
@@ -66,6 +72,9 @@ export default function AuditPage() {
                   >
                     <span className="font-semibold uppercase text-xs">{issue.severity}</span>:{" "}
                     {issue.message}
+                    {issue.url && (
+                      <span className="block text-xs opacity-70 mt-0.5 break-all">{issue.url}</span>
+                    )}
                   </li>
                 ))}
               </ul>
