@@ -17,6 +17,8 @@ from app.api.v1 import (
     tenancy,
 )
 from app.core.auth_deps import get_current_user
+from app.core.observability import MetricsMiddleware
+from app.core.security_headers import SecurityHeadersMiddleware
 from app.services.metering import QuotaExceeded
 
 configure_logging()
@@ -26,6 +28,8 @@ logger = get_logger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("startup", app_env=settings.app_env, port=settings.api_port)
+    if settings.app_env != "dev" and settings.secret_key == "dev-secret-change-me":
+        logger.warning("insecure_secret_key", detail="SECRET_KEY is the default — set a strong value")
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
@@ -33,8 +37,10 @@ async def lifespan(app: FastAPI):
     logger.info("shutdown")
 
 
-app = FastAPI(title="DClaw SEO", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="DClaw SEO", version=settings.app_version, lifespan=lifespan)
 
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(MetricsMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3006"],

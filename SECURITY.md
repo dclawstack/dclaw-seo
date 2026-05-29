@@ -1,0 +1,55 @@
+# Security (H.5)
+
+How DClaw SEO handles secrets, containers, transport, and dependency hygiene.
+
+## Secrets
+
+- **No secrets in the repo.** All credentials come from the environment
+  (`backend/.env`, gitignored) or, in Kubernetes, from a `Secret` (see
+  `helm/`). `.env.example` documents every key with empty/placeholder values.
+- `SECRET_KEY` signs JWTs. It defaults to a dev placeholder; **set a strong
+  random value in production** (`openssl rand -hex 32`). The app logs a warning
+  on startup if the default is used outside `dev`.
+- Third-party keys (`OPENROUTER_API_KEY`, `STRIPE_API_KEY`, `GBP_API_KEY`,
+  `PAGESPEED_API_KEY`, SMTP) are all optional and read from env only.
+
+## Containers
+
+- **Backend** runs as the non-root `appuser` (see `backend/Dockerfile`).
+- **Frontend** runs as the non-root `node` user (see `frontend/Dockerfile`).
+- Kubernetes deployments set `runAsNonRoot: true` and drop capabilities (see
+  `helm/`).
+
+## Transport
+
+- TLS is terminated at the ingress. The Helm chart ships an `Ingress` with TLS
+  enabled and HSTS; the app also emits HSTS + hardening headers
+  (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`,
+  `Permissions-Policy`) via middleware in production.
+
+## AuthN / AuthZ
+
+- All feature APIs require a valid JWT (`Authorization: Bearer …`); only
+  `/health`, `/metrics`, `/admin/health`, and `/api/v1/auth/*` are public.
+- Passwords are hashed with bcrypt; tokens are HS256 with a configurable expiry.
+- Data and LLM spend are scoped per organization (multi-tenant, see H.3).
+
+## Dependency audit
+
+Run the dependency vulnerability scan locally:
+
+```bash
+./scripts/security_audit.sh
+```
+
+CI runs `pip-audit` on every push (non-blocking, see `.github/workflows/ci.yml`).
+
+### Known / tracked advisories
+
+- **Frontend `next`** bumped `14.2.5 → 14.2.35` (latest 14.2 patch) to clear the
+  critical advisory flagged by `npm`. Remaining `npm audit` items on the Next 14
+  line require a **Next 15 major upgrade**, tracked as separate follow-up work
+  (App Router migration) rather than a blind bump.
+- **Backend `pytest`** (CVE-2025-71176) is a **test-only** dependency in the
+  `[dev]` extra — it is not installed in the production image
+  (`pip install -e ".[prod]"`), so it carries no runtime exposure.
