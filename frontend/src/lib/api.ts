@@ -44,6 +44,13 @@ export async function getStats() {
   return apiFetch("/api/v1/seo/stats");
 }
 
+export async function generateBrief(keyword: string) {
+  return apiFetch("/api/v1/seo/content/brief", {
+    method: "POST",
+    body: JSON.stringify({ keyword }),
+  });
+}
+
 export async function analyzeBacklinks(
   targetUrl: string,
   links: { source_url: string; anchor_text?: string }[]

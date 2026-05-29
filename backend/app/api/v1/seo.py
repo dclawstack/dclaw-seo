@@ -15,8 +15,10 @@ from app.schemas.seo import (
     RankingsTrackResponse,
 )
 from app.schemas.competitor import CompetitorGapRequest, CompetitorGapResponse
+from app.schemas.content_brief import ContentBriefRequest, ContentBriefResponse
 from app.services.backlinks import analyze_backlinks, list_backlinks
 from app.services.competitor import CompetitorFetchError, competitor_gap
+from app.services.content_brief import generate_brief
 from app.services.content_optimizer import optimize_content
 from app.services.keyword_research import research_keywords
 from app.services.rank_tracker import track_rankings
@@ -54,6 +56,14 @@ async def content_optimize(
 ) -> ContentOptimizeResponse:
     """Optimize content for a target keyword."""
     return await optimize_content(db, request)
+
+
+@router.post("/content/brief", response_model=ContentBriefResponse)
+async def content_brief(
+    request: ContentBriefRequest, db: AsyncSession = Depends(get_db)
+) -> ContentBriefResponse:
+    """Generate a content brief (outline, questions, length) from Suggest + LLM."""
+    return await generate_brief(db, request)
 
 
 @router.post("/rankings/track", response_model=RankingsTrackResponse)
