@@ -8,8 +8,10 @@ from app.models.performance_metric import PerformanceMetric
 from app.models.local_seo import Citation, LocalBusiness, Review
 from app.models.report_schedule import ReportSchedule
 from app.models.tenancy import LlmCostLedger, Organization, Project, User
+from app.models.billing import BillingAccount
 
 __all__ = [
+    "BillingAccount",
     "SiteAudit",
     "Keyword",
     "Ranking",
