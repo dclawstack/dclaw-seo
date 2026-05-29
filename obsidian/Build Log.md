@@ -21,6 +21,12 @@ Human-readable mirror of development progress. One row per completed task (Neon 
 | 2026-05-29 | P0.4 | Rank Tracking & SERP Monitoring | Phase 1 | #12 | — | Pluggable SERP provider (NullSERPProvider default) + manual real positions; >5-drop alerts; never fabricated |
 | 2026-05-29 | P0.5 | Dashboard | Phase 1 | #13 | — | `GET /seo/stats` real counts + latest score + recent activity (repo `count()`/`recent()`); dashboard cards wired to live data |
 | 2026-05-29 | P0.6 | v1.0 demo wiring + smoke | Phase 1 | #14 | — | `scripts/demo.py` full P0 flow (all ✓) + `export_openapi.py`; frontend Dockerfile `ARG NEXT_PUBLIC_API_URL`; compose config valid; README runbook |
+| 2026-05-29 | — | In-app LLM config + use local Ollama | Extra | — | #39 | Settings UI + DB-backed runtime config (`llm_settings`, mig `1c36cf764fa9`); compose defaults to host Ollama (`host.docker.internal`, `llama3.2:3b`); also fixed local fonts (#38) |
+| 2026-05-29 | P1.2 | Technical Site Audit (deep crawl) | Phase 2 | #16 | — | Real httpx BFS crawler; ~12 issue types; weighted score; optional LLM summary; replaces stub + removes `seo_service.py`; `site_audits.pages_crawled` (mig `d7282a933801`) |
+| 2026-05-29 | P1.1 | Backlink Analysis & Monitoring | Phase 2 | #15 | — | `backlinks` table (mig `1183625fe59a`); pluggable provider (default none) + user links; heuristic+LLM toxicity; new/lost detection |
+| 2026-05-29 | P1.3 | Competitor Gap Analysis | Phase 2 | #17 | — | Your Suggest keywords vs competitor page terms; gap + opportunity scores; optional LLM; stateless |
+| 2026-05-29 | P1.4 | AI Content Brief Generator | Phase 2 | #18 | — | Suggest related/question queries → outline/questions/length/secondary kw; LLM-enriched or deterministic |
+| 2026-05-29 | P1.5 | Core Web Vitals / Performance Monitor | Phase 2 | #19 | — | Real Lighthouse CWV via PageSpeed Insights (free/keyless, optional `PAGESPEED_API_KEY`); `performance_metrics` (mig `e3ff7fe3c6e1`) trends; recommendations |
 
 ## Related
 

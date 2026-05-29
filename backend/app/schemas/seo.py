@@ -5,17 +5,22 @@ from typing import List, Optional
 
 class AuditRequest(BaseModel):
     url: str = Field(..., min_length=1, description="URL to audit")
+    max_pages: int = Field(10, ge=1, le=25, description="Max internal pages to crawl")
 
 
 class IssueItem(BaseModel):
-    severity: str
+    severity: str  # error | warning | info
     message: str
+    type: Optional[str] = None  # issue category, e.g. missing_title
+    url: Optional[str] = None  # page the issue was found on
 
 
 class AuditResponse(BaseModel):
     url: str
     score: int
+    pages_crawled: int = 0
     issues: List[IssueItem]
+    summary: Optional[str] = None
     created_at: datetime
 
 

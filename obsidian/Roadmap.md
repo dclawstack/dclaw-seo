@@ -20,12 +20,15 @@ Scaffold hardening shipped: ports/config reconciled, repository layer, Alembic m
 
 > **AI enrichment + live SERP** activate when an LLM / SERP-data provider is configured; without one, real free data + honest notes are returned (no fabricated metrics).
 
-## P1 — Should have (v1.1–1.2)
+## P1 — Should have (v1.1–1.2) — ✅ shipped in Phase 2
 
-- **P1.1 Backlink Analysis** — toxic-link detection + outreach scoring.
-- **P1.2 Site Audit** — crawl 10K pages; 50+ issue types; AI priority scoring.
-- **P1.3 Competitor Analysis** — track 5 competitors; 10+ content gaps.
-- **P1.4 Content Brief Generator** — brief in <30s with H2/H3 recommendations.
+- ✅ **P1.1 Backlink Analysis** — heuristic+LLM toxic-link scoring; new/lost detection; pluggable provider.
+- ✅ **P1.2 Site Audit** — real bounded httpx crawl; ~12 issue types; weighted score; optional LLM summary.
+- ✅ **P1.3 Competitor Analysis** — Suggest keywords vs competitor page terms; gaps + opportunity scores.
+- ✅ **P1.4 Content Brief Generator** — Suggest-driven outline/questions/length; LLM-enriched.
+- ✅ **P1.5 Core Web Vitals** — real Lighthouse via PageSpeed Insights; trend history + recommendations.
+
+> Same design rule as P0: real free data always; AI/provider-dependent depth activates when configured.
 
 ## P2 — Could have (v1.3+)
 

@@ -44,6 +44,37 @@ export async function getStats() {
   return apiFetch("/api/v1/seo/stats");
 }
 
+export async function generateBrief(keyword: string) {
+  return apiFetch("/api/v1/seo/content/brief", {
+    method: "POST",
+    body: JSON.stringify({ keyword }),
+  });
+}
+
+export async function checkPerformance(url: string, strategy = "mobile") {
+  return apiFetch("/api/v1/seo/performance", {
+    method: "POST",
+    body: JSON.stringify({ url, strategy }),
+  });
+}
+
+export async function analyzeBacklinks(
+  targetUrl: string,
+  links: { source_url: string; anchor_text?: string }[]
+) {
+  return apiFetch("/api/v1/seo/backlinks/analyze", {
+    method: "POST",
+    body: JSON.stringify({ target_url: targetUrl, links }),
+  });
+}
+
+export async function competitorGap(seed: string, competitorUrl: string) {
+  return apiFetch("/api/v1/seo/competitor/gap", {
+    method: "POST",
+    body: JSON.stringify({ seed, competitor_url: competitorUrl }),
+  });
+}
+
 export async function getLLMSettings() {
   return apiFetch("/api/v1/settings/llm");
 }
