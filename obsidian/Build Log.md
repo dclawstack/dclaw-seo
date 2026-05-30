@@ -29,6 +29,21 @@ Human-readable mirror of development progress. One row per completed task (Neon 
 | 2026-05-29 | P1.5 | Core Web Vitals / Performance Monitor | Phase 2 | #19 | — | Real Lighthouse CWV via PageSpeed Insights (free/keyless, optional `PAGESPEED_API_KEY`); `performance_metrics` (mig `e3ff7fe3c6e1`) trends; recommendations |
 | 2026-05-30 | — | Hide copilot widget on welcome splash | Maint | — | #45 | `usePathname` guard returns `null` on `/` so the floating copilot is hidden on the bare splash; tsc clean (seo's landing fallback was already correct at 3006, so no port-fix PR) |
 | 2026-05-30 | — | Local Docker refresh (standalone) | Maint | — | — | Rebuilt + recreated via `docker-compose.standalone.yml` (bundled per-app Postgres, internal 5432, not host-published); new code verified live on :3006 |
+| 2026-05-30 | P2.1 | AI Content Writer | Phase 3 | #20 | #47 | Long-form draft via LLM; internal 5-gram originality score + LLM fact-check notes; Google-Suggest scaffold fallback. `/writer` page |
+| 2026-05-30 | P2.2 | AI Meta Tags & Schema | Phase 3 | #21 | #47 | Length-bounded title/meta, OG + Twitter cards, JSON-LD Article schema; from URL or pasted content. `/meta` page |
+| 2026-05-30 | P2.4 | Video SEO | Phase 3 | #23 | #47 | 3 CTR-tuned YouTube title variants, description, tags, hashtags. `/video` page |
+| 2026-05-30 | P2.3 | Local SEO Manager | Phase 3 | #22 | #48 | GBP sync (env), citation tracking, NAP consistency scan (suffix/abbrev/apostrophe-aware), AI review replies; `local_businesses`/`citations`/`reviews` (mig `a0bf4ea01bf5`). `/local` page |
+| 2026-05-30 | P2.5 | White-Label Reports | Phase 3 | #24 | #49 | Branded PDF (fpdf2) + CSV from real metrics; AI exec summary; scheduled delivery behind SMTP; `report_schedules` (mig `b1c2d3e4f5a6`). `/reports` page |
+| 2026-05-30 | P2.6 | Predictive Rank Forecasting | Phase 3 | #25 | #49 | OLS trend on real rank history, competitor-adjusted, rank-floored; `insufficient_data` when <2 points (no invented numbers). `/forecast` page |
+| 2026-05-30 | H.1 | Auth (self-contained JWT) | Phase 4 | #26 | #50 | `users` table, bcrypt, PyJWT; `/auth` register/login/me; HTTPBearer dep protects all feature routers; `/login` page + token-aware apiFetch |
+| 2026-05-30 | H.3 | Multi-tenant + cost ledger/quota | Phase 4 | #28 | #50 | `organizations→projects` hierarchy; `llm_cost_ledger`; central metering via a request-scoped `Meter` ContextVar in `services/llm.py`; monthly cost cap (402); migration `c2d3e4f5a6b7`. `/account` page |
+| 2026-05-30 | H.2 | Billing (Stripe-optional) | Phase 4 | #27 | #51 | free/starter/pro plans; per-seat + metered invoicing from the cost ledger; Stripe via httpx behind env; `billing_accounts` (mig `d3e4f5a6b7c8`). `/billing` page |
+| 2026-05-30 | H.4 | Observability | Phase 4 | #29 | #52 | prometheus-client `/metrics` (request count + latency, route-template labels) + `MetricsMiddleware`; `/admin/health`; `observability/` Prometheus + auto-provisioned Grafana dashboard |
+| 2026-05-30 | H.5 | Security hardening | Phase 4 | #30 | #52 | Security headers middleware (HSTS in prod); non-root frontend container; SECRET_KEY warning; `SECURITY.md`; pip-audit script + CI job. **Bumped Next.js 14.2.5→14.2.35 to clear a critical CVE** |
+| 2026-05-30 | H.6 | Helm / K8s production deploy | Phase 4 | #31 | #53 | Consolidated `helm/dclaw-seo`: backend+frontend ClusterIP, non-root securityContext, probes, CloudNativePG, TLS ingress, per-env values, deploy CI (lint+template+guarded upgrade). Removed stale duplicate root chart |
+| 2026-05-30 | H.7 | Docs, demo & YC checklist | Phase 4 | #32 | #54 | `docs/USER_GUIDE.md` (+ generated PDF), `DEMO.md` walkthrough, REVISED-PRD §8 checklist closed (15/15), README→v2.0, `docs/releases/v2.0.0.md` |
+
+> **🏁 2026-05-30 — Plan complete.** All 34 tasks / 5 phases Done (v2.0). Neon 34/34, GitHub 34/34 closed, Project #6 34/34 Done. Live stack healthy at version 2.0.0.
 
 ## Related
 

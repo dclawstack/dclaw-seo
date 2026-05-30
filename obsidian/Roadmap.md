@@ -30,19 +30,34 @@ Scaffold hardening shipped: ports/config reconciled, repository layer, Alembic m
 
 > Same design rule as P0: real free data always; AI/provider-dependent depth activates when configured.
 
-## P2 — Could have (v1.3+)
+## P2 — Vertical / scale (Phase 3) — ✅ shipped in v1.3+
 
-- **P2.1 AI Content Writer** — long-form generation + fact-checking.
-- **P2.2 Local SEO** — GBP sync, citations, review responses.
-- **P2.3 Video SEO** — YouTube title/description/tag optimization.
-- **P2.4 White-Label Reports** — branded, scheduled client reports.
+- ✅ **P2.1 AI Content Writer** — long-form draft + originality + LLM fact-check notes.
+- ✅ **P2.2 AI Meta Tags & Schema** — title/meta, OG/Twitter, JSON-LD.
+- ✅ **P2.3 Local SEO Manager** — GBP sync, citations, NAP consistency scan, AI review replies.
+- ✅ **P2.4 Video SEO** — 3 CTR YouTube title variants, description, tags, hashtags.
+- ✅ **P2.5 White-Label Reports** — branded PDF/CSV, AI exec summary, scheduled delivery.
+- ✅ **P2.6 Predictive Rank Forecasting** — OLS trend on real history, competitor-adjusted.
 
-## Implementation sequence (PLAN-v1.2)
+## Hardening & launch (Phase 4) — ✅ shipped in v2.0
 
-1. **Wk 1–2:** AI SEO Copilot + Keyword Research
-2. **Wk 3–4:** Rank Tracking + Site Audit
-3. **Wk 5–6:** Competitor Gap + Content Briefs
-4. **Wk 7–8:** Backlink Analysis + Performance Monitor
+- ✅ **H.1 Auth** — self-contained JWT (bcrypt, login UI); all feature routes protected.
+- ✅ **H.2 Billing** — free/starter/pro, per-seat + metered invoicing, Stripe-optional.
+- ✅ **H.3 Multi-tenant + cost ledger** — org→project hierarchy; per-org LLM cost ledger + cap.
+- ✅ **H.4 Observability** — Prometheus `/metrics`, `/admin/health`, Grafana dashboard.
+- ✅ **H.5 Security** — non-root containers, security headers, no hardcoded secrets, dep audit.
+- ✅ **H.6 Helm / K8s** — CloudNativePG, ClusterIP, TLS ingress, per-env values, deploy CI.
+- ✅ **H.7 Docs & demo** — user guide (+PDF), demo walkthrough, REVISED-PRD §8 closed.
+- ✅ **H.8 Marketing landing** — standalone Next.js site live on Vercel (shipped early).
+
+> **🏁 All phases complete (v2.0).** 34/34 tasks; 92 backend tests; live at version 2.0.0.
+
+## Implementation sequence (as built)
+
+1. **Phase 0–1:** foundation + P0 (Copilot, Keywords, Optimizer, Rank, Dashboard) → v1.0
+2. **Phase 2:** Audit, Backlinks, Competitor, Briefs, CWV → v1.2
+3. **Phase 3:** Writer, Meta/Schema, Video, Local SEO, Reports, Forecasting → v1.3+
+4. **Phase 4:** Auth, Billing, Multi-tenant, Observability, Security, Helm, Docs → v2.0
 
 ## Related
 

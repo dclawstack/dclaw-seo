@@ -14,11 +14,13 @@ The detailed phase-wise build plan lives in [`DEV-PLAN.md`](../DEV-PLAN.md) at t
 
 ## Phases
 
-- **Phase 0 — Foundation & Scaffold Hardening** (`v0.1.0`) — repos/alembic/no-mock/tests/config + **DKube purple design system** (#33). Issues #1–#7, #33.
-- **Phase 1 — P0 Foundation Features** (`v1.0.0`) — LLM abstraction, AI SEO Copilot, Keyword Research, Content Optimizer, Rank Tracking, Dashboard, demo. Issues #8–#14.
-- **Phase 2 — P1 Platform Features** (`v1.1–1.2`) — backlinks, deep audit, competitor gap, content briefs, CWV. Issues #15–#19.
-- **Phase 3 — P2 Vertical / Scale** (`v1.3+`) — content writer, meta/schema, local SEO, video SEO, white-label, forecasting. Issues #20–#25.
-- **Phase 4 — Hardening, Market-Ready & Launch** (`v2.0`) — auth, billing, multi-tenant, observability, security, K8s, docs/demo + **standalone landing site** (#34, Vercel-deferred). Issues #26–#32, #34.
+> **✅ All phases complete (v2.0, 2026-05-30).** 34/34 tasks `Done` in Neon; all GitHub issues closed; Project #6 all `Done`.
+
+- ✅ **Phase 0 — Foundation & Scaffold Hardening** (`v0.1.0`) — repos/alembic/no-mock/tests/config + **DKube purple design system** (#33). Issues #1–#7, #33.
+- ✅ **Phase 1 — P0 Foundation Features** (`v1.0.0`) — LLM abstraction, AI SEO Copilot, Keyword Research, Content Optimizer, Rank Tracking, Dashboard, demo. Issues #8–#14.
+- ✅ **Phase 2 — P1 Platform Features** (`v1.1–1.2`) — backlinks, deep audit, competitor gap, content briefs, CWV. Issues #15–#19.
+- ✅ **Phase 3 — P2 Vertical / Scale** (`v1.3+`) — content writer, meta/schema, local SEO, video SEO, white-label reports, forecasting. Issues #20–#25 (PRs #47–49).
+- ✅ **Phase 4 — Hardening, Market-Ready & Launch** (`v2.0`) — auth, billing, multi-tenant + cost ledger, observability, security, Helm/K8s, docs/demo + **standalone landing site** (#34, on Vercel). Issues #26–#32, #34 (PRs #50–54).
 
 > **Design & landing.** The app frontend and the landing site both use the unified **DKube purple `--dk-*`** design kit + Poppins, identical to `dclaw-marketing` (this supersedes the emerald `#10B981` in REVISED-PRD). The landing page is a separate Next.js site whose hero CTA links through to the app frontend.
 

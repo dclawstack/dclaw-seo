@@ -10,28 +10,35 @@
 | Vector | Qdrant / pgvector (only if RAG/semantic search) |
 | Cache/Bus | Redis 7.x |
 | Object storage | MinIO |
-| Auth | Logto (JWT validation on protected routes) |
-| LLM | Ollama (local) · OpenRouter + Kimi K2.5 (cloud fallback) |
-| Container | Docker Compose (dev) · Helm chart (prod) |
-| CI | GitHub Actions (incl. Claude Code Action) |
+| Auth | **Self-contained JWT** (bcrypt + PyJWT; `core/security.py`) — chosen over Logto for a keyless, fully-testable flow |
+| Multi-tenancy | org→project hierarchy; per-org LLM **cost ledger + cap** (metered via a `Meter` ContextVar in `services/llm.py`) |
+| Billing | free/starter/pro, per-seat + metered invoicing; Stripe optional (httpx, no SDK) |
+| LLM | Ollama (local, default) · OpenRouter (cloud fallback) |
+| Observability | Prometheus `/metrics` + `MetricsMiddleware` · `/admin/health` · Grafana (`observability/`) |
+| Container | Docker Compose (dev) · Helm chart (prod, `helm/dclaw-seo`) |
+| CI | GitHub Actions (CI + build + deploy + Claude Code Action) |
 
 ## Directory layout
 
 ```
 backend/
   app/
-    api/      main.py · routes/health.py · v1/  (app routers)
-    core/     config.py · database.py (Base, engine, get_db)
-    models/   base.py + domain models
+    api/      main.py · routes/health.py (+/metrics,/admin/health) · v1/ (seo, ai, auth, tenancy, billing, local_seo, reports, settings)
+    core/     config.py · database.py · security.py (JWT/bcrypt) · auth_deps.py · context.py (Meter) · observability.py · security_headers.py
+    models/   base.py + domain + tenancy + billing + local_seo + report_schedule
     repositories/  CRUD layer (all DB access goes here)
     schemas/  Pydantic v2
-    services/ business logic / AI
-  alembic/    migrations (async env.py; 6 revisions through v1.2)
-  tests/      conftest.py + pytest-asyncio
+    services/ business logic / AI (llm.py = single metered call site · metering.py · billing.py · forecast.py · reports.py · …)
+  alembic/    migrations (async env.py; 11 revisions through v2.0)
+  scripts/    demo.py · export_openapi.py · build_user_guide_pdf.py
+  tests/      conftest.py (seeds a tenant + auth override) + pytest-asyncio (92 tests)
 frontend/
-  src/app/         App Router pages
+  src/app/         App Router pages (incl. login, account, billing, writer, meta, video, local, forecast, reports)
   src/components/ui/  pre-built UI components
-  src/lib/         api.ts (typed fetch) · utils.ts (cn())
+  src/lib/         api.ts (typed fetch + JWT/token handling) · utils.ts (cn())
+helm/dclaw-seo/  Helm chart (CNPG, ingress, per-env values)
+observability/   Prometheus config + Grafana provisioning/dashboards
+landing/         standalone marketing site (Vercel)
 ```
 
 ## Ports ✅ (canonical, reconciled in F0.1)
